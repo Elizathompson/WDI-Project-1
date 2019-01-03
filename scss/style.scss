@@ -38,6 +38,67 @@ div.food {
   background-size: 50%;
 }
 
+div.big-food {
+  background-image: url('https://t5.rbxcdn.com/4db7f1bd2c5e6c439edf891b595e30ce');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 85%;
+}
+
 div.wall {
   background: blue;
+}
+
+@-moz-keyframes blink {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+
+@-webkit-keyframes blink {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+/* IE */
+@-ms-keyframes blink {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+/* Opera and prob css3 final iteration */
+@keyframes blink {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+.big-food {
+    -moz-animation: blink normal 0.5s infinite ease-in-out; /* Firefox */
+    -webkit-animation: blink normal 0.5s infinite ease-in-out; /* Webkit */
+    -ms-animation: blink normal 0.5s infinite ease-in-out; /* IE */
+    animation: blink normal 0.5s infinite ease-in-out; /* Opera and prob css3 final iteration */
 }

@@ -9,25 +9,23 @@ $(() => {
   const width = 5
   let pacPosition = 0
   let currentPac = 0
-  let timerId
   let direction = 'forward'
 
   const $grid = $('.gameboard div')
   $grid.eq(pacPosition).addClass('pacman')
 
 
-//---------FUNCTIONS---------
+  //---------FUNCTIONS---------
+
+  //this function runs based on the keystroke. If pacs position on the grid then add 1 to current position of pac. Add the class of pacman to the div at the new position and remove the class of food so that we no longer see the food.
   function movePac() {
-    clearTimeout(timerId)
     currentPac = currentPac === 3 ? 0 : currentPac + 1
     $grid.eq(pacPosition)
-    .addClass('pacman')
-    .removeClass('food')
-    .attr('data-step', currentPac)
-    .attr('data-direction', direction)
+      .addClass('pacman')
+      .removeClass('food')
+      .attr('data-step', currentPac)
+      .attr('data-direction', direction)
   }
-
-
 
 
   //event listener for key strokes
@@ -40,19 +38,18 @@ $(() => {
         pacPosition--
         direction = 'backward'
       }
-      break
+        break
       case 38: if(pacPosition - width >= 0) pacPosition -= width
-      break
+        break
       case 39: if(pacPosition % width < width-1) {
         pacPosition++
         direction = 'forward'
       }
-      break
+        break
       case 40: if(pacPosition + width < width*width) pacPosition += width
-      break
+        break
     }
-    console.log(e.keyCode)
-
+    
     movePac()
 
   })
