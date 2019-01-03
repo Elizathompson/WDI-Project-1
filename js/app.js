@@ -23,6 +23,7 @@ $(() => {
     $grid.eq(pacPosition)
       .addClass('pacman')
       .removeClass('food')
+      .removeClass('big-food')
       .attr('data-step', currentPac)
       .attr('data-direction', direction)
   }
@@ -49,7 +50,7 @@ $(() => {
       case 40: if(pacPosition + width < width*width) pacPosition += width
         break
     }
-    
+
     movePac()
 
   })
