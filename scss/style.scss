@@ -1,5 +1,5 @@
 body {
-  // background: black;
+  background: black;
 }
 
 img {
@@ -12,10 +12,11 @@ img {
 
 .gameboard {
   margin: 50px auto;
-  width: 600px;
-  height: 600px;
+  width: 700px;
+  height: 700px;
   display: flex;
   flex-wrap: wrap;
+  border: 4px dotted white;
 
   div {
     width: 100px;
@@ -41,6 +42,22 @@ img {
   flex-grow: 1;
   height: 5%;
   width: 5%;
+}
+
+.gameboard div.pacman[data-direction="forward"] {
+  transform: scaleX(1)
+}
+
+.gameboard div.pacman[data-direction="backward"] {
+  transform: scaleX(-1)
+}
+
+.gameboard div.pacman[data-direction="down"] {
+  transform: rotate(90deg)
+}
+
+.gameboard div.pacman[data-direction="up"] {
+  transform: rotate(270deg)
 }
 
 div.pacman {
