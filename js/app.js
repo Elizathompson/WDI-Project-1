@@ -18,18 +18,26 @@ $(() => {
   const $squares = $('.gameboard div')
   $squares.eq(pacPosition).addClass('pacman')
 
+
   //-----------------------------------------FUNCTIONS-----------------------------------------
 
   //function to create maze
   function makeMaze() {
     $('#4,#5,#6,#7,#8,#9,#10,#11').addClass('wall')
   } makeMaze()
-  
+
 
   //function to generate food
   function makeFood() {
     $squares.addClass('food')
   } makeFood()
+
+  // function to randomly generate superfood
+  function makeSuperFood() {
+    for(let i = 0; i<10; i++) {
+      $($squares[Math.floor(Math.random()*$squares.length)]).addClass('big-food')
+    }
+  } makeSuperFood()
 
 
   // function to move pacman
