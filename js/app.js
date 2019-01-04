@@ -14,7 +14,7 @@ $(() => {
   $board.attr('data-width', width)
 
   for(let i = 0; i<width*width; i++) {
-    $board.append($('<div />'))
+    $board.append($('<div id='+ i +' />'))
   }
 
   const $grid = $('.gameboard div')
