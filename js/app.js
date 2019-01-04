@@ -6,7 +6,7 @@ $(() => {
   // const $food = $('.food')
   // const $wall = $('.wall')
   // const $pac = $('.pacman')
-  const width = 5
+  const width = 20
   let pacPosition = 0
   let currentPac = 0
   let direction = 'forward'
@@ -28,8 +28,8 @@ $(() => {
     currentPac = currentPac === 3 ? 0 : currentPac + 1
     $grid.eq(pacPosition)
       .addClass('pacman')
-      .removeClass('food')
-      .removeClass('big-food')
+      // .removeClass('food')
+      // .removeClass('big-food')
       .attr('data-step', currentPac)
       .attr('data-direction', direction)
   }
