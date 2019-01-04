@@ -1,34 +1,30 @@
 $(() => {
   console.log('js loaded')
 
-  //---------VARIABLES---------
+  //-----------------------------------------VARIABLES-----------------------------------------
   const $board = $('.gameboard')
-  console.log($board)
-  // const $food = $('.food')
-  // const $wall = $('.wall')
-  // const $pac = $('.pacman')
   const width = 20
   let pacPosition = 0
   let currentPac = 0
   let direction = 'forward'
 
+  // create board
   $board.attr('data-width', width)
-
-
-
   for(let i = 0; i<width*width; i++) {
     $board.append($('<div id='+ i +' />'))
   }
 
+  // generate pacman
   const $squares = $('.gameboard div')
   $squares.eq(pacPosition).addClass('pacman')
 
+  //-----------------------------------------FUNCTIONS-----------------------------------------
 
-  //---------FUNCTIONS---------
   //function to create maze
   function makeMaze() {
     $('#4,#5,#6,#7,#8,#9,#10,#11').addClass('wall')
   } makeMaze()
+  
 
   //function to generate food
   function makeFood() {
@@ -36,7 +32,7 @@ $(() => {
   } makeFood()
 
 
-  //this function runs based on the keystroke. If pacs position on the grid then add 1 to current position of pac. Add the class of pacman to the div at the new position and remove the class of food so that we no longer see the food.
+  // function to move pacman
   function movePac() {
     currentPac = currentPac === 3 ? 0 : currentPac + 1
     $squares.eq(pacPosition)
@@ -45,8 +41,14 @@ $(() => {
       .removeClass('big-food')
       .attr('data-step', currentPac)
       .attr('data-direction', direction)
+    console.log(pacPosition)
   }
 
+  //if pacPosition === div with class of 'wall' do not move pac
+
+
+
+  //-----------------------------------------EVENT LISTENERS-----------------------------------------
 
   //event listener for key strokes
   $(document).on('keydown', e => {
@@ -72,7 +74,7 @@ $(() => {
       case 40: if(pacPosition + width < width*width){
         pacPosition += width
         direction = 'down'
-      }  
+      }
         break
     }
 
