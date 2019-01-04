@@ -3,13 +3,19 @@ $(() => {
 
   //---------VARIABLES---------
   const $board = $('.gameboard')
-  const $food = $('.food')
-  const $wall = $('.wall')
-  const $pac = $('.pacman')
+  // const $food = $('.food')
+  // const $wall = $('.wall')
+  // const $pac = $('.pacman')
   const width = 5
   let pacPosition = 0
   let currentPac = 0
   let direction = 'forward'
+
+  $board.attr('data-width', width)
+
+  for(let i = 0; i<width*width; i++) {
+    $board.append($('<div />'))
+  }
 
   const $grid = $('.gameboard div')
   $grid.eq(pacPosition).addClass('pacman')
