@@ -4,9 +4,13 @@ $(() => {
   //-----------------------------------------VARIABLES-----------------------------------------
   const $board = $('.gameboard')
   const width = 20
+  const mazeArray = [206, 207, 208, 209, 210, 211, 212, 213, 214, 215]
   let pacPosition = 0
   let currentPac = 0
   let direction = 'forward'
+
+
+
 
   // create board
   $board.attr('data-width', width)
@@ -19,25 +23,27 @@ $(() => {
   $squares.eq(pacPosition).addClass('pacman')
 
 
+
   //-----------------------------------------FUNCTIONS-----------------------------------------
-
-  //function to create maze
-  function makeMaze() {
-    $('#4,#5,#6,#7,#8,#9,#10,#11').addClass('wall')
-  } makeMaze()
-
 
   //function to generate food
   function makeFood() {
     $squares.addClass('food')
   } makeFood()
 
+  //function to create maze
+   mazeArray.forEach(mazeId => {
+     $(`[id='${mazeId}']`).removeClass('food')
+     $(`[id='${mazeId}']`).addClass('wall')
+  })
+
+
   // function to randomly generate superfood
-  function makeSuperFood() {
-    for(let i = 0; i<10; i++) {
-      $($squares[Math.floor(Math.random()*$squares.length)]).addClass('big-food')
-    }
-  } makeSuperFood()
+  // function makeSuperFood() {
+  //   for(let i = 0; i<10; i++) {
+  //     $($squares[Math.floor(Math.random()*$squares.length)]).addClass('big-food')
+  //   }
+  // } makeSuperFood()
 
 
   // function to move pacman
