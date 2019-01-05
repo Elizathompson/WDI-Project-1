@@ -4,13 +4,10 @@ $(() => {
   //-----------------------------------------VARIABLES-----------------------------------------
   const $board = $('.gameboard')
   const width = 20
-  const mazeArray = [206, 207, 208, 209, 210, 211, 212, 213, 214, 215]
+  const mazeArray = [26, 33, 46, 53, 66, 73, 86, 93, 101, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 118, 168, 169, 170, 171, 188, 191, 208, 211, 228, 229, 230, 231, 281, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 298, 306, 313, 326, 333, 346, 353, 366, 373]
   let pacPosition = 0
-  let currentPac = 0
+  // let currentPac = 0
   let direction = 'forward'
-
-
-
 
   // create board
   $board.attr('data-width', width)
@@ -26,15 +23,15 @@ $(() => {
 
   //-----------------------------------------FUNCTIONS-----------------------------------------
 
-  //function to generate food
+  //generate food
   function makeFood() {
     $squares.addClass('food')
   } makeFood()
 
-  //function to create maze
-   mazeArray.forEach(mazeId => {
-     $(`[id='${mazeId}']`).removeClass('food')
-     $(`[id='${mazeId}']`).addClass('wall')
+  //create maze
+  mazeArray.forEach(mazeId => {
+    $(`[id='${mazeId}']`).removeClass('food')
+    $(`[id='${mazeId}']`).addClass('wall')
   })
 
 
@@ -48,19 +45,16 @@ $(() => {
 
   // function to move pacman
   function movePac() {
-    currentPac = currentPac === 3 ? 0 : currentPac + 1
+    const nextPac =
+    // currentPac = currentPac === 3 ? 0 : currentPac + 1
     $squares.eq(pacPosition)
       .addClass('pacman')
       .removeClass('food')
       .removeClass('big-food')
-      .attr('data-step', currentPac)
+      // .attr('data-step', currentPac)
       .attr('data-direction', direction)
     console.log(pacPosition)
   }
-
-  //if pacPosition === div with class of 'wall' do not move pac
-
-
 
   //-----------------------------------------EVENT LISTENERS-----------------------------------------
 
@@ -71,6 +65,8 @@ $(() => {
     // left 37, up 38, right 39, down 40
     switch(e.keyCode) {
       case 37: if(pacPosition % width > 0){
+        const newPosition = pacPosition - 1
+        if (mazeArray.includes(newPosition)) return
         pacPosition--
         direction = 'backward'
       }
