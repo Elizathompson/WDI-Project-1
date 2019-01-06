@@ -21,8 +21,8 @@ $(() => {
   //start game
   function startGame() {
     createBoard()
-    makePac()
     makeFood()
+    makePac()
     createMaze()
     startMovement()
     makeSuperFood()
@@ -46,7 +46,9 @@ $(() => {
 
   // generate pacman
   function makePac(){
-    $squares.eq(pacPosition).addClass('pacman')
+    $squares.eq(pacPosition)
+      .removeClass('food')
+      .addClass('pacman')
   }
 
   //generate food
