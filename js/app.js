@@ -6,19 +6,23 @@ $(() => {
   const width = 20
   const mazeArray = [26, 33, 46, 53, 66, 73, 86, 93, 101, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 118, 168, 169, 170, 171, 188, 191, 208, 211, 228, 229, 230, 231, 281, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 298, 306, 313, 326, 333, 346, 353, 366, 373]
   let pacPosition = 0
-  // let currentPac = 0
-  let direction = 'forward'
+  let $squares
 
   // create board
-  $board.attr('data-width', width)
-  for(let i = 0; i<width*width; i++) {
-    $board.append($('<div id='+ i +' />'))
+  function createBoard(){
+    $board.attr('data-width', width)
+    for(let i = 0; i<width*width; i++) {
+      $board.append($('<div id='+ i +' />'))
+    }
+    $squares = $('.gameboard div')
   }
+  createBoard()
 
   // generate pacman
-  const $squares = $('.gameboard div')
-  $squares.eq(pacPosition).addClass('pacman')
-
+  function makePac(){
+    $squares.eq(pacPosition).addClass('pacman')
+  }
+  makePac()
 
 
   //-----------------------------------------FUNCTIONS-----------------------------------------
@@ -26,7 +30,9 @@ $(() => {
   //generate food
   function makeFood() {
     $squares.addClass('food')
-  } makeFood()
+  }
+
+  makeFood()
 
   //create maze
   mazeArray.forEach(mazeId => {
@@ -44,15 +50,24 @@ $(() => {
 
 
   // function to move pacman
-  function movePac() {
-    const nextPac =
-    // currentPac = currentPac === 3 ? 0 : currentPac + 1
+  function movePac(movement) {
+    console.log('movement: ', movement)
+    const directions = {
+      '-1': 'backward',
+      [`-${width}`]: 'up',
+      1: 'forward',
+      [`${width}`]: 'down'
+    }
+    console.log(directions)
+    const newPosition = pacPosition + movement
+    if (mazeArray.includes(newPosition)) return
+    $squares.eq(pacPosition).removeClass('pacman')
+    pacPosition = newPosition
     $squares.eq(pacPosition)
       .addClass('pacman')
       .removeClass('food')
       .removeClass('big-food')
-      // .attr('data-step', currentPac)
-      .attr('data-direction', direction)
+      .attr('data-direction', directions[movement] )
     console.log(pacPosition)
   }
 
@@ -60,35 +75,28 @@ $(() => {
 
   //event listener for key strokes
   $(document).on('keydown', e => {
-    $squares.eq(pacPosition).removeClass('pacman')
+
 
     // left 37, up 38, right 39, down 40
     switch(e.keyCode) {
       case 37: if(pacPosition % width > 0){
-        const newPosition = pacPosition - 1
-        if (mazeArray.includes(newPosition)) return
-        pacPosition--
-        direction = 'backward'
+        movePac(-1)
       }
         break
       case 38: if(pacPosition - width >= 0) {
-        pacPosition -= width
-        direction = 'up'
+        movePac(-width)
       }
         break
       case 39: if(pacPosition % width < width-1) {
-        pacPosition++
-        direction = 'forward'
+        movePac(1)
       }
         break
       case 40: if(pacPosition + width < width*width){
-        pacPosition += width
-        direction = 'down'
+        movePac(width)
       }
         break
     }
 
-    movePac()
 
   })
 
