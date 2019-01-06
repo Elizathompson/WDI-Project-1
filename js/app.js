@@ -12,6 +12,10 @@ $(() => {
     [`${width}`]: 'down'
   }
   const $scoreBoard = $('.score-board')
+  const $endScreen = $('.game-over')
+  const $endScreenHeader = $endScreen.find('h2')
+  const $endScreenPara = $endScreen.find('p')
+  const $restartButton = $('.restart')
   let pacPosition = 0
   let $squares
   let score = 0
@@ -47,6 +51,7 @@ $(() => {
     blinkyInterval = setInterval(moveBlinky, 300)
     inkyInterval = setInterval(moveInky, 700)
     pinkyInterval = setInterval(movePinky, 900)
+    $endScreen.hide()
   }
 
   function makeGhosts(){
@@ -96,12 +101,11 @@ $(() => {
     pinkyPosition = newPinkyPosition
     $squares.eq(pinkyPosition).addClass('pink-ghost')
   }
+  
   //reset game on click
-  // function resetGame(){
-  //   $(document).off('keydown')
-  //   // need event listener for the click on reset button
-  //   startGame()
-  // }
+  //$restartButton.on('click', startGame()) - event listener to restart game on click
+  //this needs to run a function to show a start screen
+  //startGame function to run when button on start street is clicked
 
   // create board
   function createBoard(){
@@ -121,7 +125,7 @@ $(() => {
 
   //generate food
   function makeFood() {
-    $squares.addClass('food')
+    $squares.eq(20).addClass('food')
   }
 
   //create maze
@@ -180,7 +184,12 @@ $(() => {
 
   //end game
   function gameOver(){
-    alert('game is over')
+    clearTimeout(blinkyInterval)
+    $board.hide()
+    $scoreBoard.hide()
+    $endScreen.show()
+    $endScreenHeader.text('Game Over!!!')
+    $endScreenPara.text(`You scored ${score}`)
   }
 
   //allows movement
