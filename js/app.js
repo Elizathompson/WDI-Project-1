@@ -11,6 +11,7 @@ $(() => {
     1: 'forward',
     [`${width}`]: 'down'
   }
+  const $scoreBoard = $('.score-board')
   let pacPosition = 0
   let $squares
   let score = 0
@@ -107,6 +108,7 @@ $(() => {
   //update score
   function updateScore(points) {
     score += points
+    $scoreBoard.text(`Current Score ${score}`)
     console.log(score)
   }
 
