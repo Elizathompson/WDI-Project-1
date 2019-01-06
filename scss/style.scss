@@ -12,7 +12,7 @@ img {
 .score-board {
   color: white;
   font-size: 20px;
-  font-weight: bold; 
+  font-weight: bold;
 }
 
 .gameboard {
@@ -88,6 +88,13 @@ div.big-food {
 
 div.wall {
   background-image: url('https://vignette.wikia.nocookie.net/nintendo/images/6/63/Brick_Block.png/revision/latest?cb=20151206062204&path-prefix=en');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+div.orange-ghost {
+  background-image: url('https://pngimage.net/wp-content/uploads/2018/06/pacman-ghost-png-2.png');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;

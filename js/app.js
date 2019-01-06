@@ -15,8 +15,9 @@ $(() => {
   let pacPosition = 0
   let $squares
   let score = 0
-
-
+  let clydePosition
+  let clydeInterval
+  const ghostMovementOptions = [-1, 1, -width, width]
 
   //-----------------------------------------FUNCTIONS-----------------------------------------
 
@@ -28,6 +29,22 @@ $(() => {
     createMaze()
     startMovement()
     makeSuperFood()
+    makeGhost()
+    clydeInterval = setInterval(moveClyde, 500)
+
+  }
+
+  function makeGhost(){
+    clydePosition =  209
+    $squares.eq(clydePosition).addClass('orange-ghost')
+  }
+
+  function moveClyde(){
+    const newClydePosition = clydePosition + ghostMovementOptions[Math.floor(Math.random()* 3)]
+    if (mazeArray.includes(newClydePosition)) return
+    $squares.eq(clydePosition).removeClass('orange-ghost')
+    clydePosition = newClydePosition
+    $squares.eq(clydePosition).addClass('orange-ghost')
   }
 
   //reset game on click
@@ -66,12 +83,11 @@ $(() => {
     })
   }
 
-
   // function to randomly generate superfood
   function makeSuperFood() {
     for(let i = 0; i<10; i++) {
       let superFoodId = Math.floor(Math.random()*$squares.length)
-      while (mazeArray.includes(superFoodId) || pacPosition === superFoodId ) {
+      while (mazeArray.includes(superFoodId) || pacPosition === superFoodId || clydePosition === superFoodId ) {
         superFoodId = Math.floor(Math.random()*$squares.length)
       }
       const superFoodLocation = $($squares[superFoodId])
@@ -79,7 +95,6 @@ $(() => {
       superFoodLocation.removeClass('food')
     }
   }
-
 
   // function to move pacman
   function movePac(movement) {
@@ -118,10 +133,6 @@ $(() => {
   function gameOver(){
     alert('game is over')
   }
-
-
-
-  //-----------------------------------------EVENT LISTENERS-----------------------------------------
 
   //allows movement
   function startMovement(){
