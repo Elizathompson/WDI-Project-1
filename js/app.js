@@ -5,12 +5,34 @@ $(() => {
   const $board = $('.gameboard')
   const width = 20
   const mazeArray = [26, 33, 46, 53, 66, 73, 86, 93, 101, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 118, 168, 169, 170, 171, 188, 191, 208, 211, 228, 229, 230, 231, 281, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 298, 306, 313, 326, 333, 346, 353, 366, 373]
+  const directions = {
+    '-1': 'backward',
+    [`-${width}`]: 'up',
+    1: 'forward',
+    [`${width}`]: 'down'
+  }
   let pacPosition = 0
   let $squares
 
 
 
   //-----------------------------------------FUNCTIONS-----------------------------------------
+
+  //start game
+  function startGame() {
+    createBoard()
+    makePac()
+    makeFood()
+    createMaze()
+    startMovement()
+  }
+
+  //reset game on click
+  // function resetGame(){
+  //   $(document).off('keydown')
+  //   // need event listener for the click on reset button
+  //   startGame()
+  // }
 
   // create board
   function createBoard(){
@@ -20,20 +42,16 @@ $(() => {
     }
     $squares = $('.gameboard div')
   }
-  createBoard()
 
   // generate pacman
   function makePac(){
     $squares.eq(pacPosition).addClass('pacman')
   }
-  makePac()
 
   //generate food
   function makeFood() {
     $squares.addClass('food')
   }
-
-  makeFood()
 
   //create maze
   function createMaze(){
@@ -42,7 +60,6 @@ $(() => {
       $(`[id='${mazeId}']`).addClass('wall')
     })
   }
-  createMaze()
 
 
   // function to randomly generate superfood
@@ -55,14 +72,6 @@ $(() => {
 
   // function to move pacman
   function movePac(movement) {
-    console.log('movement: ', movement)
-    const directions = {
-      '-1': 'backward',
-      [`-${width}`]: 'up',
-      1: 'forward',
-      [`${width}`]: 'down'
-    }
-    console.log(directions)
     const newPosition = pacPosition + movement
     if (mazeArray.includes(newPosition)) return
     $squares.eq(pacPosition).removeClass('pacman')
@@ -72,37 +81,36 @@ $(() => {
       .removeClass('food')
       .removeClass('big-food')
       .attr('data-direction', directions[movement] )
-    console.log(pacPosition)
   }
 
   //-----------------------------------------EVENT LISTENERS-----------------------------------------
 
-  //event listener for key strokes
-  $(document).on('keydown', e => {
+  //allows movement
+  function startMovement(){
+    $(document).on('keydown', e => {
 
-
-    // left 37, up 38, right 39, down 40
-    switch(e.keyCode) {
-      case 37: if(pacPosition % width > 0){
-        movePac(-1)
+      // backward 37, up 38, forward 39, down 40
+      switch(e.keyCode) {
+        case 37: if(pacPosition % width > 0){
+          movePac(-1)
+        }
+          break
+        case 38: if(pacPosition - width >= 0) {
+          movePac(-width)
+        }
+          break
+        case 39: if(pacPosition % width < width-1) {
+          movePac(1)
+        }
+          break
+        case 40: if(pacPosition + width < width*width){
+          movePac(width)
+        }
+          break
       }
-        break
-      case 38: if(pacPosition - width >= 0) {
-        movePac(-width)
-      }
-        break
-      case 39: if(pacPosition % width < width-1) {
-        movePac(1)
-      }
-        break
-      case 40: if(pacPosition + width < width*width){
-        movePac(width)
-      }
-        break
-    }
-
-
-  })
+    })
+  }
+  startGame()
 
 
 
