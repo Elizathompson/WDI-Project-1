@@ -13,6 +13,7 @@ $(() => {
   }
   let pacPosition = 0
   let $squares
+  let score = 0
 
 
 
@@ -69,13 +70,12 @@ $(() => {
   function makeSuperFood() {
     for(let i = 0; i<10; i++) {
       let superFoodId = Math.floor(Math.random()*$squares.length)
-      console.log('superfood', superFoodId)
       while (mazeArray.includes(superFoodId)) {
-        console.log('chancing things')
         superFoodId = Math.floor(Math.random()*$squares.length)
       }
       const superFoodLocation = $($squares[superFoodId])
       superFoodLocation.addClass('big-food')
+      superFoodLocation.removeClass('food')
     }
   }
 
@@ -86,12 +86,31 @@ $(() => {
     if (mazeArray.includes(newPosition)) return
     $squares.eq(pacPosition).removeClass('pacman')
     pacPosition = newPosition
-    $squares.eq(pacPosition)
-      .addClass('pacman')
+    const pacSquare = $squares.eq(pacPosition)
+    checkForPoints(pacSquare)
+    pacSquare.addClass('pacman')
       .removeClass('food')
       .removeClass('big-food')
       .attr('data-direction', directions[movement] )
   }
+
+  //track score
+  function checkForPoints(location){
+
+    if (location.hasClass('food')) {
+      updateScore(10)
+    }
+    if (location.hasClass('big-food')) {
+      updateScore(50)
+    }
+  }
+
+  //update score
+  function updateScore(points) {
+    score += points
+    console.log(score)
+  }
+
 
   //-----------------------------------------EVENT LISTENERS-----------------------------------------
 
