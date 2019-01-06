@@ -70,7 +70,7 @@ $(() => {
   function makeSuperFood() {
     for(let i = 0; i<10; i++) {
       let superFoodId = Math.floor(Math.random()*$squares.length)
-      while (mazeArray.includes(superFoodId)) {
+      while (mazeArray.includes(superFoodId) || pacPosition === superFoodId ) {
         superFoodId = Math.floor(Math.random()*$squares.length)
       }
       const superFoodLocation = $($squares[superFoodId])
@@ -96,7 +96,6 @@ $(() => {
 
   //track score
   function checkForPoints(location){
-
     if (location.hasClass('food')) {
       updateScore(10)
     }
