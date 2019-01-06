@@ -15,9 +15,18 @@ $(() => {
   let pacPosition = 0
   let $squares
   let score = 0
+  const ghostMovementOptions = [-1, 1, -width, width]
   let clydePosition
   let clydeInterval
-  const ghostMovementOptions = [-1, 1, -width, width]
+  let blinkyPosition
+  let blinkyInterval
+  let inkyPosition
+  let inkyInterval
+  let pinkyPosition
+  let pinkyInterval
+
+
+
 
   //-----------------------------------------FUNCTIONS-----------------------------------------
 
@@ -29,14 +38,22 @@ $(() => {
     createMaze()
     startMovement()
     makeSuperFood()
-    makeGhost()
+    makeGhosts()
     clydeInterval = setInterval(moveClyde, 500)
-
+    blinkyInterval = setInterval(moveBlinky, 300)
+    inkyInterval = setInterval(moveInky, 700)
+    pinkyInterval = setInterval(movePinky, 900)
   }
 
-  function makeGhost(){
+  function makeGhosts(){
     clydePosition =  209
     $squares.eq(clydePosition).addClass('orange-ghost')
+    blinkyPosition = 190
+    $squares.eq(blinkyPosition).addClass('red-ghost')
+    inkyPosition = 210
+    $squares.eq(inkyPosition).addClass('cyan-ghost')
+    pinkyPosition = 189
+    $squares.eq(pinkyPosition).addClass('pink-ghost')
   }
 
   function moveClyde(){
@@ -47,6 +64,29 @@ $(() => {
     $squares.eq(clydePosition).addClass('orange-ghost')
   }
 
+  function moveBlinky(){
+    const newBlinkyPosition = blinkyPosition + ghostMovementOptions[Math.floor(Math.random()* 3)]
+    if (mazeArray.includes(newBlinkyPosition)) return
+    $squares.eq(blinkyPosition).removeClass('red-ghost')
+    blinkyPosition = newBlinkyPosition
+    $squares.eq(blinkyPosition).addClass('red-ghost')
+  }
+
+  function moveInky(){
+    const newInkyPosition = inkyPosition + ghostMovementOptions[Math.floor(Math.random()* 3)]
+    if (mazeArray.includes(newInkyPosition)) return
+    $squares.eq(inkyPosition).removeClass('cyan-ghost')
+    inkyPosition = newInkyPosition
+    $squares.eq(inkyPosition).addClass('cyan-ghost')
+  }
+
+  function movePinky(){
+    const newPinkyPosition = pinkyPosition + ghostMovementOptions[Math.floor(Math.random()* 3)]
+    if (mazeArray.includes(newPinkyPosition)) return
+    $squares.eq(pinkyPosition).removeClass('pink-ghost')
+    pinkyPosition = newPinkyPosition
+    $squares.eq(pinkyPosition).addClass('pink-ghost')
+  }
   //reset game on click
   // function resetGame(){
   //   $(document).off('keydown')

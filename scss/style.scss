@@ -100,6 +100,28 @@ div.orange-ghost {
   background-repeat: no-repeat;
 }
 
+div.red-ghost {
+  background-image: url('https://www.clipartmax.com/png/middle/93-930142_the-red-ghost-pac-man-red-ghost.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+div.cyan-ghost {
+  background-image: url('https://img.fireden.net/v/image/1512/44/1512440069164.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+div.pink-ghost {
+  background-image: url('https://t7.rbxcdn.com/4b92f11a3b72ec0394c796a7b894d60f');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+
+}
+
 @-moz-keyframes blink {
     0% {
         opacity:1;
