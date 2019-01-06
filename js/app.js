@@ -88,10 +88,10 @@ $(() => {
   }
 
 
-    function movePinky(){
+  function movePinky(){
     const newPinkyPosition = pinkyPosition + ghostMovementOptions[movementDirectionPinky]
     if (mazeArray.includes(newPinkyPosition))
-    return movementDirectionPinky = Math.floor(Math.random()* 3)
+      return movementDirectionPinky = Math.floor(Math.random()* 3)
     $squares.eq(pinkyPosition).removeClass('pink-ghost')
     pinkyPosition = newPinkyPosition
     $squares.eq(pinkyPosition).addClass('pink-ghost')
@@ -136,7 +136,7 @@ $(() => {
   function makeSuperFood() {
     for(let i = 0; i<10; i++) {
       let superFoodId = Math.floor(Math.random()*$squares.length)
-      while (mazeArray.includes(superFoodId) || pacPosition === superFoodId || clydePosition === superFoodId ) {
+      while (mazeArray.includes(superFoodId) || pacPosition === superFoodId || clydePosition === superFoodId || blinkyPosition === superFoodId || inkyPosition === superFoodId || pinkyPosition === superFoodId) {
         superFoodId = Math.floor(Math.random()*$squares.length)
       }
       const superFoodLocation = $($squares[superFoodId])
