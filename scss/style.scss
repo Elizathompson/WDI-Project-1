@@ -125,9 +125,13 @@ div.game-over {
   color: white;
   font-weight: bold;
   font-size: 20px;
-
 }
 
+div.welcome {
+  color: white;
+  font-size: 20px;
+  font-weight: 20px;
+}
 @-moz-keyframes blink {
     0% {
         opacity:1;

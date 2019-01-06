@@ -49,7 +49,7 @@ $(() => {
     $scoreBoard.hide()
     $endScreen.hide()
     $startScreenHeader.text('Welcome to Pac Man')
-    $endScreenPara.text('Click the button to start the game')
+    $startScreenPara.text('Click the button to start the game')
   }
 
   //event listener to start game on click
@@ -235,7 +235,8 @@ $(() => {
     })
   }
   welcomeToGame()
-
+  //event listener to reset game on click
+  $restartButton.on('click', welcomeToGame)
 
 
 })
