@@ -4,7 +4,7 @@ $(() => {
   //-----------------------------------------VARIABLES-----------------------------------------
   const $board = $('.gameboard')
   const width = 20
-  const mazeArray = [26, 33, 46, 53, 66, 73, 86, 93, 101, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 118, 188, 191, 208, 211, 228, 229, 230, 231, 281, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 298, 306, 313, 326, 333, 346, 353, 366, 373]
+  const mazeArray = [26, 33, 46, 53, 66, 73, 86, 93, 101, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 118, 281, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 298, 306, 313, 326, 333, 346, 353, 366, 373]
   const directions = {
     '-1': 'backward',
     [`-${width}`]: 'up',
@@ -18,12 +18,16 @@ $(() => {
   const ghostMovementOptions = [-1, 1, -width, width]
   let clydePosition
   let clydeInterval
+  let movementDirectionClyde = Math.floor(Math.random()* 3)
   let blinkyPosition
   let blinkyInterval
+  let movementDirectionBlinky = Math.floor(Math.random()* 3)
   let inkyPosition
   let inkyInterval
+  let movementDirectionInky = Math.floor(Math.random()* 3)
   let pinkyPosition
   let pinkyInterval
+  let movementDirectionPinky = Math.floor(Math.random()* 3)
 
 
 
@@ -57,32 +61,37 @@ $(() => {
   }
 
   function moveClyde(){
-    const newClydePosition = clydePosition + ghostMovementOptions[Math.floor(Math.random()* 3)]
-    if (mazeArray.includes(newClydePosition)) return
+    const newClydePosition = clydePosition + ghostMovementOptions[movementDirectionClyde]
+    if (mazeArray.includes(newClydePosition))
+      return movementDirectionClyde = Math.floor(Math.random()* 3)
     $squares.eq(clydePosition).removeClass('orange-ghost')
     clydePosition = newClydePosition
     $squares.eq(clydePosition).addClass('orange-ghost')
   }
 
   function moveBlinky(){
-    const newBlinkyPosition = blinkyPosition + ghostMovementOptions[Math.floor(Math.random()* 3)]
-    if (mazeArray.includes(newBlinkyPosition)) return
+    const newBlinkyPosition = blinkyPosition + ghostMovementOptions[movementDirectionBlinky]
+    if (mazeArray.includes(newBlinkyPosition))
+      return movementDirectionBlinky = Math.floor(Math.random()* 3)
     $squares.eq(blinkyPosition).removeClass('red-ghost')
     blinkyPosition = newBlinkyPosition
     $squares.eq(blinkyPosition).addClass('red-ghost')
   }
 
   function moveInky(){
-    const newInkyPosition = inkyPosition + ghostMovementOptions[Math.floor(Math.random()* 3)]
-    if (mazeArray.includes(newInkyPosition)) return
+    const newInkyPosition = inkyPosition + ghostMovementOptions[movementDirectionInky]
+    if (mazeArray.includes(newInkyPosition))
+      return movementDirectionInky = Math.floor(Math.random()* 3)
     $squares.eq(inkyPosition).removeClass('cyan-ghost')
     inkyPosition = newInkyPosition
     $squares.eq(inkyPosition).addClass('cyan-ghost')
   }
 
-  function movePinky(){
-    const newPinkyPosition = pinkyPosition + ghostMovementOptions[Math.floor(Math.random()* 3)]
-    if (mazeArray.includes(newPinkyPosition)) return
+
+    function movePinky(){
+    const newPinkyPosition = pinkyPosition + ghostMovementOptions[movementDirectionPinky]
+    if (mazeArray.includes(newPinkyPosition))
+    return movementDirectionPinky = Math.floor(Math.random()* 3)
     $squares.eq(pinkyPosition).removeClass('pink-ghost')
     pinkyPosition = newPinkyPosition
     $squares.eq(pinkyPosition).addClass('pink-ghost')
