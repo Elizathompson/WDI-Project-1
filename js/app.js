@@ -25,6 +25,7 @@ $(() => {
     makeFood()
     createMaze()
     startMovement()
+    makeSuperFood()
   }
 
   //reset game on click
@@ -63,11 +64,18 @@ $(() => {
 
 
   // function to randomly generate superfood
-  // function makeSuperFood() {
-  //   for(let i = 0; i<10; i++) {
-  //     $($squares[Math.floor(Math.random()*$squares.length)]).addClass('big-food')
-  //   }
-  // } makeSuperFood()
+  function makeSuperFood() {
+    for(let i = 0; i<10; i++) {
+      let superFoodId = Math.floor(Math.random()*$squares.length)
+      console.log('superfood', superFoodId)
+      while (mazeArray.includes(superFoodId)) {
+        console.log('chancing things')
+        superFoodId = Math.floor(Math.random()*$squares.length)
+      }
+      const superFoodLocation = $($squares[superFoodId])
+      superFoodLocation.addClass('big-food')
+    }
+  }
 
 
   // function to move pacman
