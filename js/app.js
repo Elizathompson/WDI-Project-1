@@ -4,7 +4,7 @@ $(() => {
   //-----------------------------------------VARIABLES-----------------------------------------
   const $board = $('.gameboard')
   const width = 20
-  const mazeArray = [26, 33, 46, 53, 66, 73, 86, 93, 101, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 118, 168, 169, 170, 171, 188, 191, 208, 211, 228, 229, 230, 231, 281, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 298, 306, 313, 326, 333, 346, 353, 366, 373]
+  const mazeArray = [26, 33, 46, 53, 66, 73, 86, 93, 101, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 118, 188, 191, 208, 211, 228, 229, 230, 231, 281, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 298, 306, 313, 326, 333, 346, 353, 366, 373]
   const directions = {
     '-1': 'backward',
     [`-${width}`]: 'up',
@@ -92,7 +92,10 @@ $(() => {
     pacSquare.addClass('pacman')
       .removeClass('food')
       .removeClass('big-food')
-      .attr('data-direction', directions[movement] )
+      .attr('data-direction', directions[movement])
+    if (!$squares.toArray().some(square => square.classList.contains('food'))){
+      setTimeout(gameOver(),1000)
+    }
   }
 
   //track score
@@ -109,8 +112,13 @@ $(() => {
   function updateScore(points) {
     score += points
     $scoreBoard.text(`Current Score ${score}`)
-    console.log(score)
   }
+
+  //end game
+  function gameOver(){
+    alert('game is over')
+  }
+
 
 
   //-----------------------------------------EVENT LISTENERS-----------------------------------------
