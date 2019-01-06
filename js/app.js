@@ -8,6 +8,10 @@ $(() => {
   let pacPosition = 0
   let $squares
 
+
+
+  //-----------------------------------------FUNCTIONS-----------------------------------------
+
   // create board
   function createBoard(){
     $board.attr('data-width', width)
@@ -24,9 +28,6 @@ $(() => {
   }
   makePac()
 
-
-  //-----------------------------------------FUNCTIONS-----------------------------------------
-
   //generate food
   function makeFood() {
     $squares.addClass('food')
@@ -35,10 +36,13 @@ $(() => {
   makeFood()
 
   //create maze
-  mazeArray.forEach(mazeId => {
-    $(`[id='${mazeId}']`).removeClass('food')
-    $(`[id='${mazeId}']`).addClass('wall')
-  })
+  function createMaze(){
+    mazeArray.forEach(mazeId => {
+      $(`[id='${mazeId}']`).removeClass('food')
+      $(`[id='${mazeId}']`).addClass('wall')
+    })
+  }
+  createMaze()
 
 
   // function to randomly generate superfood
