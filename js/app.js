@@ -16,6 +16,10 @@ $(() => {
   const $endScreenHeader = $endScreen.find('h2')
   const $endScreenPara = $endScreen.find('p')
   const $restartButton = $('.restart')
+  const $startScreen = $('.welcome')
+  const $startScreenHeader = $startScreen.find('h1')
+  const $startScreenPara = $startScreen.find('p')
+  const $startButton = $('.start')
   let pacPosition = 0
   let $squares
   let score = 0
@@ -38,8 +42,25 @@ $(() => {
 
   //-----------------------------------------FUNCTIONS-----------------------------------------
 
+  // welcome to game
+  function welcomeToGame(){
+    $startScreen.show()
+    $board.hide()
+    $scoreBoard.hide()
+    $endScreen.hide()
+    $startScreenHeader.text('Welcome to Pac Man')
+    $endScreenPara.text('Click the button to start the game')
+  }
+
+  //event listener to start game on click
+  $startButton.on('click', startGame)
+
   //start game
   function startGame() {
+    $board.show()
+    $scoreBoard.show()
+    $startScreen.hide()
+    $endScreen.hide()
     createBoard()
     makeFood()
     makePac()
@@ -51,7 +72,6 @@ $(() => {
     blinkyInterval = setInterval(moveBlinky, 300)
     inkyInterval = setInterval(moveInky, 700)
     pinkyInterval = setInterval(movePinky, 900)
-    $endScreen.hide()
   }
 
   function makeGhosts(){
@@ -101,11 +121,6 @@ $(() => {
     pinkyPosition = newPinkyPosition
     $squares.eq(pinkyPosition).addClass('pink-ghost')
   }
-  
-  //reset game on click
-  //$restartButton.on('click', startGame()) - event listener to restart game on click
-  //this needs to run a function to show a start screen
-  //startGame function to run when button on start street is clicked
 
   // create board
   function createBoard(){
@@ -190,6 +205,8 @@ $(() => {
     $endScreen.show()
     $endScreenHeader.text('Game Over!!!')
     $endScreenPara.text(`You scored ${score}`)
+    //event listener to reset game on click
+    $restartButton.on('click', welcomeToGame)
   }
 
   //allows movement
@@ -217,7 +234,7 @@ $(() => {
       }
     })
   }
-  startGame()
+  welcomeToGame()
 
 
 
