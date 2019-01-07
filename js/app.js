@@ -54,6 +54,9 @@ $(() => {
   let pacPosition = 0
   let $squares
   let score = 0
+  let blueGhosts
+  let pacMoves = true
+  let pacInterval
   //----------Ghost Variables----------
   let clydeInterval
   let blinkyInterval
@@ -89,6 +92,7 @@ $(() => {
     blinkyInterval = setInterval(() => moveGhost('red'), 500)
     inkyInterval = setInterval(() => moveGhost('cyan'), 500)
     pinkyInterval = setInterval(() => moveGhost('pink'), 500)
+    pacInterval = setInterval(() => pacMoves = true, 200)
   }
   //----------Ghost Functions----------
 
@@ -100,33 +104,32 @@ $(() => {
     $squares.eq(189).addClass('pink ghost')
   }
 
-  function checkGhostPosition(ghostPosition, ghostClass){
-    const filterGhosts = ghostObjects.filter(ghost => ghost.color !== ghostClass)
-    return filterGhosts.some(ghost => ghost.position + ghost.direction) === ghostPosition + ghostDirections[ghostClass]
-
-  }
-
-
   function moveGhost(ghostClass) {
+    let occupied = false
+
     const ghostPosition = $(`.gameboard .${ghostClass}.ghost`).index()
     const newGhostPosition = ghostPosition + ghostDirections[ghostClass]
+    if($squares.eq(newGhostPosition).hasClass('ghost')){
+      occupied = true
+    }
     if (mazeArray.includes(newGhostPosition) || !(newGhostPosition % width > -1) ||
-    !(newGhostPosition - width > 0) || !(newGhostPosition % width < width -1) || !(newGhostPosition + width < width*width) || checkGhostPosition(ghostPosition, ghostClass)) {
+    !(newGhostPosition - width > 0) || !(newGhostPosition % width < width -1) || !(newGhostPosition + width < width*width) || occupied){
       ghostDirections[ghostClass] = ghostMovementOptions[Math.floor(Math.random()* 4)]
       return false
     }
     ghostObjects.find(ghost => ghost.color === ghostClass).direction = ghostDirections[ghostClass]
     ghostObjects[ghostObjects.findIndex(ghost => ghost.color === ghostClass)].position+=ghostDirections[ghostClass]
 
+
+
     $squares.eq(ghostPosition).removeClass(ghostClass)
     $squares.eq(ghostPosition).removeClass('ghost')
+    $squares.eq(ghostPosition).removeClass('blue')
     $squares.eq(newGhostPosition).addClass(ghostClass)
     $squares.eq(newGhostPosition).addClass('ghost')
+
+    if(blueGhosts)$squares.eq(newGhostPosition).addClass('blue')
   }
-
-
-  //need function that changes colour of all the ghosts when superfood is eaten by pacman. Similar logic to when food is eaten except I want to remove the normal ghost classes, add a new generic blue  ghost class for a set interval. At interval end I want the old classes to go back on. Use CSS animation to make the temp blue class blink like the superFoodIndex
-
 
   // create board
   function createBoard(){
@@ -198,8 +201,18 @@ $(() => {
     }
   }
 
+
+
   function changeGhosts() {
-    ghostObjects.forEach(ghost => $squares.eq(ghost.position).removeClass('ghost').addClass('blue'))
+    ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
+    blueGhosts = true
+    setTimeout(showGhostAgain,2000)
+  }
+
+  function showGhostAgain(){
+    blueGhosts = false
+
+    ghostObjects.forEach(ghost => $squares.eq(ghost.position).removeClass('blue'))
   }
 
   //track score
@@ -241,7 +254,7 @@ $(() => {
   //allows movement
   function startMovement(){
     $(document).on('keydown', e => {
-
+      if (!pacMoves) return
       // backward 37, up 38, forward 39, down 40
       switch(e.keyCode) {
         case 37: if(pacPosition % width > 0){
@@ -261,6 +274,7 @@ $(() => {
         }
           break
       }
+      pacMoves = false
     })
   }
 

@@ -100,6 +100,9 @@ div.orange.ghost {
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+  &.blue{
+    background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
+  }
 }
 
 div.red.ghost {
@@ -107,6 +110,9 @@ div.red.ghost {
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+  &.blue{
+    background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
+  }
 }
 
 div.cyan.ghost {
@@ -114,6 +120,9 @@ div.cyan.ghost {
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+  &.blue{
+    background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
+  }
 }
 
 div.pink.ghost {
@@ -121,14 +130,18 @@ div.pink.ghost {
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+  &.blue{
+    background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
+  }
 }
 
-div.blue {
-  background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
+
+// div.blue {
+//   background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
+//   background-position: center;
+//   background-size: contain;
+//   background-repeat: no-repeat;
+// }
 div.game-over {
   color: white;
   font-weight: bold;
