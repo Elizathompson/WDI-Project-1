@@ -208,12 +208,11 @@ $(() => {
   function changeGhosts() {
     ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
     blueGhosts = true
-    setTimeout(showGhostAgain,5000)
+    setTimeout(showGhostAgain,3500)
   }
 
   function showGhostAgain(){
     blueGhosts = false
-
     ghostObjects.forEach(ghost => $squares.eq(ghost.position).removeClass('blue'))
   }
 
@@ -227,7 +226,10 @@ $(() => {
       updateScore(50)
       changeGhosts()
     }
-    if (location.hasClass('ghost')) {
+    if (location.hasClass('ghost') && location.hasClass('blue')) {
+      updateScore(200)
+    }
+    if (location.hasClass('ghost') && !location.hasClass('blue')) {
       gameOver()
     }
   }
