@@ -95,33 +95,39 @@ div.wall {
   background-repeat: no-repeat;
 }
 
-div.orange-ghost {
+div.orange.ghost {
   background-image: url('https://pngimage.net/wp-content/uploads/2018/06/pacman-ghost-png-2.png');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
 }
 
-div.red-ghost {
+div.red.ghost {
   background-image: url('https://hanslodge.com/img/1865523.png');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
 }
 
-div.cyan-ghost {
+div.cyan.ghost {
   background-image: url('https://img.fireden.net/v/image/1512/44/1512440069164.png');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
 }
 
-div.pink-ghost {
+div.pink.ghost {
   background-image: url('https://t7.rbxcdn.com/4b92f11a3b72ec0394c796a7b894d60f');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+}
 
+div.blue {
+  background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 div.game-over {
   color: white;
