@@ -120,8 +120,6 @@ $(() => {
     ghostObjects.find(ghost => ghost.color === ghostClass).direction = ghostDirections[ghostClass]
     ghostObjects[ghostObjects.findIndex(ghost => ghost.color === ghostClass)].position+=ghostDirections[ghostClass]
 
-
-
     $squares.eq(ghostPosition).removeClass(ghostClass)
     $squares.eq(ghostPosition).removeClass('ghost')
     $squares.eq(ghostPosition).removeClass('blue')
@@ -129,6 +127,10 @@ $(() => {
     $squares.eq(newGhostPosition).addClass('ghost')
 
     if(blueGhosts)$squares.eq(newGhostPosition).addClass('blue')
+
+    if ($squares.eq(newGhostPosition).hasClass('pacman')) {
+      gameOver()
+    }
   }
 
   // create board
@@ -206,7 +208,7 @@ $(() => {
   function changeGhosts() {
     ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
     blueGhosts = true
-    setTimeout(showGhostAgain,2000)
+    setTimeout(showGhostAgain,5000)
   }
 
   function showGhostAgain(){
