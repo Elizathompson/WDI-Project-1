@@ -11,8 +11,10 @@ img {
 }
 .score-board {
   color: white;
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
+  text-align: center;
+  margin-top: 25px;
 }
 
 .gameboard {
@@ -125,12 +127,16 @@ div.game-over {
   color: white;
   font-weight: bold;
   font-size: 20px;
+  text-align: center;
+  margin-top: 300px;
 }
 
 div.welcome {
   color: white;
   font-size: 20px;
   font-weight: 20px;
+  text-align: center;
+  margin-top: 300px;
 }
 @-moz-keyframes blink {
     0% {

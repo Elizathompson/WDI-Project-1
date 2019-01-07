@@ -1,5 +1,14 @@
 $(() => {
   console.log('js loaded')
+  const width = 20
+  const ghostMovementOptions = [-1, 1, -width, width]
+  let ghostPosition
+  const ghostDirections = {
+    'orange-ghost': ghostMovementOptions[0],
+    'red-ghost': ghostMovementOptions[1],
+    'cyan-ghost': ghostMovementOptions[2],
+    'pink-ghost': ghostMovementOptions[3]
+  }
 
   //-----------------------------------------VARIABLES-----------------------------------------
   const $board = $('.gameboard')
@@ -12,7 +21,6 @@ $(() => {
   const $startScreenHeader = $startScreen.find('h1')
   const $startScreenPara = $startScreen.find('p')
   const $startButton = $('.start')
-  const width = 20
   const mazeArray = [26, 33, 46, 53, 66, 73, 86, 93, 101, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 118, 281, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 298, 306, 313, 326, 333, 346, 353, 366, 373]
   const directions = {
     '-1': 'backward',
@@ -24,23 +32,10 @@ $(() => {
   let $squares
   let score = 0
   //----------Ghost Variables----------
-  const ghostMovementOptions = [-1, 1, -width, width]
-  let clydePosition
   let clydeInterval
-  let movementDirectionClyde = Math.floor(Math.random()* 3)
-  let blinkyPosition
   let blinkyInterval
-  let movementDirectionBlinky = Math.floor(Math.random()* 3)
-  let inkyPosition
   let inkyInterval
-  let movementDirectionInky = Math.floor(Math.random()* 3)
-  let pinkyPosition
   let pinkyInterval
-  let movementDirectionPinky = Math.floor(Math.random()* 3)
-
-
-
-
   //-----------------------------------------FUNCTIONS-----------------------------------------
 
   // welcomeToGame is called on page load and gives player option to start game on button click
@@ -59,6 +54,7 @@ $(() => {
     $scoreBoard.show()
     $startScreen.hide()
     $endScreen.hide()
+    destroyBoard()
     createBoard()
     makeFood()
     makePac()
@@ -66,63 +62,32 @@ $(() => {
     startMovement()
     makeSuperFood()
     makeGhosts()
-    clydeInterval = setInterval(moveClyde, 500)
-    blinkyInterval = setInterval(moveBlinky, 300)
-    inkyInterval = setInterval(moveInky, 700)
-    pinkyInterval = setInterval(movePinky, 900)
+    clydeInterval = setInterval(() => moveGhost('orange-ghost'), 500)
+    blinkyInterval = setInterval(() => moveGhost('red-ghost'), 500)
+    inkyInterval = setInterval(() => moveGhost('cyan-ghost'), 500)
+    pinkyInterval = setInterval(() => moveGhost('pink-ghost'), 500)
   }
   //----------Ghost Functions----------
 
   // makeGhosts is called in startGame and puts each ghost at a specific index on the gameboard and adds a class depending on which ghost it is
   function makeGhosts(){
-    clydePosition =  209
-    $squares.eq(clydePosition).addClass('orange-ghost')
-    blinkyPosition = 190
-    $squares.eq(blinkyPosition).addClass('red-ghost')
-    inkyPosition = 210
-    $squares.eq(inkyPosition).addClass('cyan-ghost')
-    pinkyPosition = 189
-    $squares.eq(pinkyPosition).addClass('pink-ghost')
+    $squares.eq(209).addClass('orange-ghost')
+    $squares.eq(190).addClass('red-ghost')
+    $squares.eq(210).addClass('cyan-ghost')
+    $squares.eq(189).addClass('pink-ghost')
   }
 
-  // moveClyde is called inside the startGame function where we set the interval for Clyde which determines how quickly he moves around the gameboard. Inside this function we are setting a  new variable which says that the newClydePosition is clydes current position plus a random movement picked from the ghostMovementOptions array. Then we are checking to see if the new position that we want him to move to is included within the mazeArray, if it is then we want the function to find a new location for Clyde as we dont want him walking through the maze walls. If the new position index isnt included in the mazeArray then we are removing clyde from his current position and adding a clas at his new position to show the movement.
-  function moveClyde(){
-    const newClydePosition = clydePosition + ghostMovementOptions[movementDirectionClyde]
-    if (mazeArray.includes(newClydePosition))
-      return movementDirectionClyde = Math.floor(Math.random()* 3)
-    $squares.eq(clydePosition).removeClass('orange-ghost')
-    clydePosition = newClydePosition
-    $squares.eq(clydePosition).addClass('orange-ghost')
-  }
-
-  // moveBlinky is called inside the startGame function where we set the interval for Blinky which determines how quickly he moves around the gameboard
-  function moveBlinky(){
-    const newBlinkyPosition = blinkyPosition + ghostMovementOptions[movementDirectionBlinky]
-    if (mazeArray.includes(newBlinkyPosition))
-      return movementDirectionBlinky = Math.floor(Math.random()* 3)
-    $squares.eq(blinkyPosition).removeClass('red-ghost')
-    blinkyPosition = newBlinkyPosition
-    $squares.eq(blinkyPosition).addClass('red-ghost')
-  }
-
-  // moveInky is called inside the startGame function where we set the interval for Inky which determines how quickly he moves around the gameboard
-  function moveInky(){
-    const newInkyPosition = inkyPosition + ghostMovementOptions[movementDirectionInky]
-    if (mazeArray.includes(newInkyPosition))
-      return movementDirectionInky = Math.floor(Math.random()* 3)
-    $squares.eq(inkyPosition).removeClass('cyan-ghost')
-    inkyPosition = newInkyPosition
-    $squares.eq(inkyPosition).addClass('cyan-ghost')
-  }
-
-  // movePinky is called inside the startGame function where we set the interval for Pinky which determines how quickly he moves around the gameboard
-  function movePinky(){
-    const newPinkyPosition = pinkyPosition + ghostMovementOptions[movementDirectionPinky]
-    if (mazeArray.includes(newPinkyPosition))
-      return movementDirectionPinky = Math.floor(Math.random()* 3)
-    $squares.eq(pinkyPosition).removeClass('pink-ghost')
-    pinkyPosition = newPinkyPosition
-    $squares.eq(pinkyPosition).addClass('pink-ghost')
+  function moveGhost(ghostClass) {
+    const ghostPosition = $(`.gameboard .${ghostClass}`).index()
+    const newGhostPosition = ghostPosition + ghostDirections[ghostClass]
+    while (mazeArray.includes(newGhostPosition) || !(newGhostPosition % width > -1) ||
+    !(newGhostPosition - width > 0) || !(newGhostPosition % width < width -1) || !(newGhostPosition + width < width*width)){
+      ghostDirections[ghostClass] = ghostMovementOptions[Math.floor(Math.random()* 4)]
+      console.log(ghostMovementOptions[Math.floor(Math.random()* 4)])
+      return false
+    }
+    $squares.eq(ghostPosition).removeClass(ghostClass)
+    $squares.eq(newGhostPosition).addClass(ghostClass)
   }
 
   //need function that changes colour of all the ghosts when superfood is eaten by pacman. Similar logic to when food is eaten except I want to remove the normal ghost classes, add a new generic blue  ghost class for a set interval. At interval end I want the old classes to go back on. Use CSS animation to make the temp blue class blink like the superFoodIndex
@@ -131,14 +96,19 @@ $(() => {
   // create board
   function createBoard(){
     $board.attr('data-width', width)
-    const $boardLength = $board.find('div')
-    console.log($boardLength)
-    if( $boardLength.length === 0){
-      for(let i = 0; i<width*width; i++) {
-        $board.append($('<div id='+ i +' />'))
-      }
-      $squares = $('.gameboard div')
+    for(let i = 0; i<width*width; i++) {
+      $board.append($('<div id='+ i +' />'))
     }
+    $squares = $('.gameboard div')
+  }
+
+  function destroyBoard() {
+    clearInterval(clydeInterval)
+    clearInterval(blinkyInterval)
+    clearInterval(inkyInterval)
+    clearInterval(pinkyInterval)
+    pacPosition = 0
+    $board.empty()
   }
 
   // generate pacman
@@ -150,7 +120,7 @@ $(() => {
 
   //generate food
   function makeFood() {
-    $squares.eq(20).addClass('food')
+    $squares.addClass('food')
   }
 
   //create maze
@@ -165,7 +135,7 @@ $(() => {
   function makeSuperFood() {
     for(let i = 0; i<10; i++) {
       let superFoodIndex = Math.floor(Math.random()*$squares.length)
-      while (mazeArray.includes(superFoodIndex) || pacPosition === superFoodIndex || clydePosition === superFoodIndex || blinkyPosition === superFoodIndex || inkyPosition === superFoodIndex || pinkyPosition === superFoodIndex) {
+      while (mazeArray.includes(superFoodIndex) || pacPosition === superFoodIndex || ghostPosition === superFoodIndex) {
         superFoodIndex = Math.floor(Math.random()*$squares.length)
       }
       const superFoodLocation = $($squares[superFoodIndex])
@@ -186,6 +156,7 @@ $(() => {
       .removeClass('food')
       .removeClass('big-food')
       .attr('data-direction', directions[movement])
+    // if pacsquare has class of any of the ghosts then run game over
     if (!$squares.toArray().some(square => square.classList.contains('food'))){
       setTimeout(gameOver(),1000)
     }
@@ -200,7 +171,14 @@ $(() => {
     if (location.hasClass('big-food')) {
       updateScore(50)
     }
+    if (location.hasClass('orange-ghost') || location.hasClass('red-ghost') || location.hasClass('cyan-ghost') || location.hasClass('pink-ghost')) {
+      gameOver()
+    }
   }
+
+  // function pacDies(){
+  //   gameOver()
+  // }
 
   //update score
   function updateScore(points) {
@@ -215,7 +193,7 @@ $(() => {
     $scoreBoard.hide()
     $endScreen.show()
     $endScreenHeader.text('Game Over!!!')
-    $endScreenPara.text(`You scored ${score}`)
+    $endScreenPara.text(`You scored ${score} points`)
     $(document).off('keydown')
   }
 
