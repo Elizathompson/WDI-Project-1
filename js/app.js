@@ -57,7 +57,7 @@ $(() => {
   const $startScreenHeader = $startScreen.find('h1')
   const $startScreenPara = $startScreen.find('p')
   const $startButton = $('.start')
-  const mazeArray = [26, 33, 46, 53, 66, 73, 86, 93, 101, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 118, 281, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 298, 306, 313, 326, 333, 346, 353, 366, 373]
+  const mazeArray = [46, 53, 66, 73, 86, 93, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 306, 313, 326, 333, 346, 353]
   let $squares
   let score = 0
   //----------Pac Variables----------
@@ -151,10 +151,10 @@ $(() => {
 
     if (
       mazeArray.includes(newGhostPosition) ||
-      newGhostPosition - width < -width || //up
-      newGhostPosition % width === 0 || //left
-      newGhostPosition % width === width - 1 || //down
-      newGhostPosition + width >= width*width //right
+      newGhostPosition - width < -width ||
+      newGhostPosition % width === width ||
+      newGhostPosition % width === 0 || //right works
+      newGhostPosition + width >= width*width
     ){
       return false
     }
