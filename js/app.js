@@ -5,10 +5,10 @@ $(() => {
   let ghostPosition
   let newGhostPosition
   const ghostDirections = {
-    'orange-ghost': ghostMovementOptions[0],
-    'red-ghost': ghostMovementOptions[1],
-    'cyan-ghost': ghostMovementOptions[2],
-    'pink-ghost': ghostMovementOptions[3]
+    'orange': ghostMovementOptions[0],
+    'red': ghostMovementOptions[1],
+    'cyan': ghostMovementOptions[2],
+    'pink': ghostMovementOptions[3]
   }
   const ghostObjects = [
     {
@@ -109,28 +109,34 @@ $(() => {
 
     const ghostPosition = $(`.gameboard .${ghostClass}.ghost`).index()
     const newGhostPosition = ghostPosition + ghostDirections[ghostClass]
+
     if($squares.eq(newGhostPosition).hasClass('ghost')){
       occupied = true
     }
-    if (mazeArray.includes(newGhostPosition) || !(newGhostPosition % width > -1) ||
-    !(newGhostPosition - width > 0) || !(newGhostPosition % width < width -1) || !(newGhostPosition + width < width*width) || occupied){
+
+    if (
+      mazeArray.includes(newGhostPosition) ||
+      newGhostPosition - width < 0 ||
+      newGhostPosition % width === 0 ||
+      newGhostPosition % width === width - 1 ||
+      newGhostPosition + width >= width*width ||
+      occupied
+    ){
       ghostDirections[ghostClass] = ghostMovementOptions[Math.floor(Math.random()* 4)]
       return false
     }
+
+    $squares.eq(ghostPosition).removeClass(`${ghostClass} ghost blue`)
+    $squares.eq(newGhostPosition).addClass(`${ghostClass} ghost`)
+
     ghostObjects.find(ghost => ghost.color === ghostClass).direction = ghostDirections[ghostClass]
-    ghostObjects[ghostObjects.findIndex(ghost => ghost.color === ghostClass)].position+=ghostDirections[ghostClass]
+    const index = ghostObjects.findIndex(ghost => ghost.color === ghostClass)
+    ghostObjects[index].position += ghostDirections[ghostClass]
 
-    $squares.eq(ghostPosition).removeClass(ghostClass)
-    $squares.eq(ghostPosition).removeClass('ghost')
-    $squares.eq(ghostPosition).removeClass('blue')
-    $squares.eq(newGhostPosition).addClass(ghostClass)
-    $squares.eq(newGhostPosition).addClass('ghost')
 
-    if(blueGhosts)$squares.eq(newGhostPosition).addClass('blue')
+    if(blueGhosts) $squares.eq(newGhostPosition).addClass('blue')
 
-    if ($squares.eq(newGhostPosition).hasClass('pacman')) {
-      gameOver()
-    }
+    if ($squares.eq(newGhostPosition).hasClass('pacman')) gameOver()
   }
 
   // create board
@@ -205,11 +211,16 @@ $(() => {
 
 
 
-  function changeGhosts() {
-    ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
+  function changeGhostsToBlue() {
     blueGhosts = true
+    ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
     setTimeout(showGhostAgain,3500)
   }
+
+  // function changeGhostToEyes(){
+  //   // blueGhosts = true
+  //   ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('eyes'))
+  // }
 
   function showGhostAgain(){
     blueGhosts = false
@@ -217,17 +228,17 @@ $(() => {
   }
 
   //track score
-  // need to add scoring that takes into account if pac eats ghosts when they have the temp class after eating superfood
   function checkForPoints(location){
     if (location.hasClass('food')) {
       updateScore(10)
     }
     if (location.hasClass('big-food')) {
       updateScore(50)
-      changeGhosts()
+      changeGhostsToBlue()
     }
     if (location.hasClass('ghost') && location.hasClass('blue')) {
       updateScore(200)
+      location.addClass('eyes')
     }
     if (location.hasClass('ghost') && !location.hasClass('blue')) {
       gameOver()
