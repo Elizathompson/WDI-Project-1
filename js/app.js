@@ -3,7 +3,7 @@ $(() => {
   //-----------------------------------------VARIABLES-----------------------------------------
   const width = 20
   //----------Ghost Variables----------
-  const ghostMovementOptions = [-1, 1, -width, width]
+  const ghostMovementOptions = [-1,1,-width,width]
   let ghostPosition
   let newGhostPosition
   const ghostDirections = {
@@ -112,78 +112,62 @@ $(() => {
 
   //FUNCTION TO MOVE THE GHOSTS
   function moveGhost(ghostClass) {
-    const running = true
-    let occupied = false
     const ghostPosition = $(`.gameboard .${ghostClass}.ghost`).index()
-    const currentPacPosition = $('.pacman').index()
+    const pacPosition = $('.pacman').index()
+    let attempts = 20
+    let newGhostPosition = getPossibleMove(ghostPosition)
+    const ghostIsBlue = $squares.eq(ghostPosition).hasClass('blue')
 
+    while(
+      !moveIsValid(newGhostPosition) ||
+      !moveIsIntelligent(ghostPosition, newGhostPosition, pacPosition, ghostIsBlue)
+    ) {
+      newGhostPosition = getPossibleMove(ghostPosition)
+      attempts--
 
-    while (running) {
-      let chaseDirection
-      if(ghostPosition<currentPacPosition) chaseDirection = 3
-      else chaseDirection = 2
-      const positionDifference = ghostPosition - currentPacPosition
-      console.log('positionDifference',positionDifference)
-      //If were going up
-      if(chaseDirection===1){
-        //if diff is positive and less than one row
-        // pac is on this row and on out right
-        //go LEFT
-        if (positionDifference < 0 ){
-          chaseDirection = 1
-        }else //if diff is positive and less than one row
-        // pac is on this row and on out right
-        if (positionDifference < width && positionDifference > 0) chaseDirection = 0
-
-
-      }
-
-      //If were going down
-      if(chaseDirection===2){
-        //if diff is negative and greater than minus width
-        //pac is on this row and on our left
-        //go Right
-        if (positionDifference < 0 ) {
-
-          chaseDirection = 1
-        }else //if diff is positive and less than one row
-        // pac is on this row and on out right
-        if (positionDifference < width && positionDifference > 0) chaseDirection = 0
-
-      }
-
-      ghostDirections[ghostClass] = ghostMovementOptions[chaseDirection]
-      const newGhostPosition = ghostPosition + ghostDirections[ghostClass]
-
-
-      if($squares.eq(newGhostPosition).hasClass('ghost')){
-        occupied = true
-      }
-
-      if (
-        mazeArray.includes(newGhostPosition) ||
-        newGhostPosition - width < -width || //up
-        newGhostPosition % width === 0 || //left
-        newGhostPosition % width === width - 1 || //down
-        newGhostPosition + width >= width*width || //right
-        occupied
-      ){
-        ghostDirections[ghostClass] = ghostMovementOptions[Math.floor(Math.random()* 4)]
-        return false
-      }
-
-      $squares.eq(ghostPosition).removeClass(`${ghostClass} ghost blue`)
-      $squares.eq(newGhostPosition).addClass(`${ghostClass} ghost`)
-
-      ghostObjects.find(ghost => ghost.color === ghostClass).direction = ghostDirections[ghostClass]
-      const index = ghostObjects.findIndex(ghost => ghost.color === ghostClass)
-      ghostObjects[index].position += ghostDirections[ghostClass]
-
-      if(blueGhosts) $squares.eq(newGhostPosition).addClass('blue')
-
-      if ($squares.eq(newGhostPosition).hasClass('pacman')) gameOver()
+      if(!attempts) return false
     }
+
+    $squares.eq(ghostPosition).removeClass(`${ghostClass} ghost blue`)
+    $squares.eq(newGhostPosition).addClass(`${ghostClass} ghost`)
+
+    ghostObjects.find(ghost => ghost.color === ghostClass).direction = ghostDirections[ghostClass]
+    const index = ghostObjects.findIndex(ghost => ghost.color === ghostClass)
+    ghostObjects[index].position += ghostDirections[ghostClass]
+
+    if(blueGhosts) $squares.eq(newGhostPosition).addClass('blue')
+
+    if ($squares.eq(newGhostPosition).hasClass('pacman')) gameOver()
   }
+
+  // FUNCTION TO FIND THE NEXT MOVE FOR THE GHOSTS
+  function getPossibleMove(ghostPosition) {
+    return ghostMovementOptions[Math.floor(Math.random() * ghostMovementOptions.length)] + ghostPosition
+  }
+
+  // FUNCTION TO CHECK IF THE GHOST IS ALLOWED TO MOVE TO NEXT POSITION SELECTED
+  function moveIsValid(newGhostPosition) {
+    if($squares.eq(newGhostPosition).hasClass('ghost')) return false
+
+    if (
+      mazeArray.includes(newGhostPosition) ||
+      newGhostPosition - width < -width || //up
+      newGhostPosition % width === 0 || //left
+      newGhostPosition % width === width - 1 || //down
+      newGhostPosition + width >= width*width //right
+    ){
+      return false
+    }
+
+    return true
+  }
+
+  // FUNCTION TO CHECK IF MOVE IS TOWARDS PAC OR AWAY FROM PAC WHEN BLUE
+  function moveIsIntelligent(currentPosition, newPosition, pacPosition, isBlue) {
+    if(isBlue) return Math.abs(currentPosition - pacPosition) < Math.abs(newPosition - pacPosition)
+    return Math.abs(currentPosition - pacPosition) > Math.abs(newPosition - pacPosition)
+  }
+
 
   //FUNCTION TO TURN THE GHOSTS BLUE - CALLED IN POINTS FUNCTION WHEN SUPERFOOD IS EATEN
   function changeGhostsToBlue() {
@@ -217,10 +201,6 @@ $(() => {
 
   // FUNCTION TO CLEAR THE BOARD ON GAME RESET
   function destroyBoard() {
-    clearInterval(clydeInterval)
-    clearInterval(blinkyInterval)
-    clearInterval(inkyInterval)
-    clearInterval(pinkyInterval)
     pacPosition = 0
     score = 0
     $board.empty()
@@ -340,7 +320,11 @@ $(() => {
 
   // FUNCTION FOR GAMEOVER
   function gameOver(){
-    clearTimeout(blinkyInterval)
+    clearInterval(clydeInterval)
+    clearInterval(blinkyInterval)
+    clearInterval(inkyInterval)
+    clearInterval(pinkyInterval)
+    clearInterval(pacInterval)
     $board.hide()
     $scoreBoard.hide()
     $endScreen.show()
