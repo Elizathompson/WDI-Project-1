@@ -39,6 +39,7 @@ $(() => {
   let inkyInterval
   let pinkyInterval
   let blueGhosts
+  let blueGhostTimer
   const directions = {
     '-1': 'backward',
     [`-${width}`]: 'up',
@@ -63,6 +64,7 @@ $(() => {
   let pacPosition = 0
   let pacMoves = true
   let pacInterval
+
 
   //-----------------------------------------FUNCTIONS-----------------------------------------
 
@@ -96,9 +98,10 @@ $(() => {
     pinkyInterval = setInterval(() => moveGhost('pink'), 500)
     pacInterval = setInterval(() => pacMoves = true, 200)
   }
-  //----------Ghost Functions----------
 
-  // makeGhosts is called in startGame and puts each ghost at a specific index on the gameboard and adds a class depending on which ghost it is
+  //--------------------GHOSTS--------------------
+
+  // FUNCTION TO MAKE THE GHOSTS AND START AT CERTAIN POSITION
   function makeGhosts(){
     $squares.eq(209).addClass('orange ghost')
     $squares.eq(190).addClass('red ghost')
@@ -106,42 +109,70 @@ $(() => {
     $squares.eq(189).addClass('pink ghost')
   }
 
+  //FUNCTION TO MOVE THE GHOSTS
   function moveGhost(ghostClass) {
+    const running = true
     let occupied = false
-
     const ghostPosition = $(`.gameboard .${ghostClass}.ghost`).index()
     const newGhostPosition = ghostPosition + ghostDirections[ghostClass]
 
-    if($squares.eq(newGhostPosition).hasClass('ghost')){
-      occupied = true
-    }
+    while (running) {
 
-    if (
-      mazeArray.includes(newGhostPosition) ||
-      newGhostPosition - width < 0 ||
-      newGhostPosition % width === 0 ||
-      newGhostPosition % width === width - 1 ||
-      newGhostPosition + width >= width*width ||
-      occupied
-    ){
       ghostDirections[ghostClass] = ghostMovementOptions[Math.floor(Math.random()* 4)]
-      return false
+
+      if($squares.eq(newGhostPosition).hasClass('ghost')){
+        occupied = true
+      }
+
+      if (
+        mazeArray.includes(newGhostPosition) ||
+        newGhostPosition - width < 0 ||
+        newGhostPosition % width === 0 ||
+        newGhostPosition % width === width - 1 ||
+        newGhostPosition + width >= width*width ||
+        occupied
+      ){
+        ghostDirections[ghostClass] = ghostMovementOptions[Math.floor(Math.random()* 4)]
+        return false
+      }
+
+      $squares.eq(ghostPosition).removeClass(`${ghostClass} ghost blue`)
+      $squares.eq(newGhostPosition).addClass(`${ghostClass} ghost`)
+
+      ghostObjects.find(ghost => ghost.color === ghostClass).direction = ghostDirections[ghostClass]
+      const index = ghostObjects.findIndex(ghost => ghost.color === ghostClass)
+      ghostObjects[index].position += ghostDirections[ghostClass]
+
+
+
+      if(blueGhosts) $squares.eq(newGhostPosition).addClass('blue')
+
+      if ($squares.eq(newGhostPosition).hasClass('pacman')) gameOver()
     }
-
-    $squares.eq(ghostPosition).removeClass(`${ghostClass} ghost blue`)
-    $squares.eq(newGhostPosition).addClass(`${ghostClass} ghost`)
-
-    ghostObjects.find(ghost => ghost.color === ghostClass).direction = ghostDirections[ghostClass]
-    const index = ghostObjects.findIndex(ghost => ghost.color === ghostClass)
-    ghostObjects[index].position += ghostDirections[ghostClass]
-
-
-    if(blueGhosts) $squares.eq(newGhostPosition).addClass('blue')
-
-    if ($squares.eq(newGhostPosition).hasClass('pacman')) gameOver()
   }
 
-  // create board
+  //FUNCTION TO TURN THE GHOSTS BLUE - CALLED IN POINTS FUNCTION WHEN SUPERFOOD IS EATEN
+  function changeGhostsToBlue() {
+    blueGhosts = true
+    ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
+    blueGhostTimer = setTimeout(showGhostAgain,3500)
+  }
+
+  // function changeGhostToEyes(location){
+  //   if ($squares.eq(location).hasClass('eyes')) {
+  //     setTimeout(8000)
+  //   }
+  // }
+
+  //FUNCTION TO TURN THE GHOSTS BACK TO NORMAL AFTER BEING BLUE FOR SET TIME
+  function showGhostAgain(){
+    blueGhosts = false
+    ghostObjects.forEach(ghost => $squares.eq(ghost.position).removeClass('blue'))
+  }
+
+  //--------------------GAMEBOARD--------------------
+
+  // FUNCTION TO CREATE THE GAMEBOARD
   function createBoard(){
     $board.attr('data-width', width)
     for(let i = 0; i<width*width; i++) {
@@ -150,6 +181,7 @@ $(() => {
     $squares = $('.gameboard div')
   }
 
+  // FUNCTION TO CLEAR THE BOARD ON GAME RESET
   function destroyBoard() {
     clearInterval(clydeInterval)
     clearInterval(blinkyInterval)
@@ -160,19 +192,7 @@ $(() => {
     $board.empty()
   }
 
-  // generate pacman
-  function makePac(){
-    $squares.eq(pacPosition)
-      .removeClass('food')
-      .addClass('pacman')
-  }
-
-  //generate food
-  function makeFood() {
-    $squares.addClass('food')
-  }
-
-  //create maze
+  // FUNCTION TO CREATE THE INTERNAL MAZE
   function createMaze(){
     mazeArray.forEach(mazeId => {
       $(`[id='${mazeId}']`).removeClass('food')
@@ -180,20 +200,16 @@ $(() => {
     })
   }
 
-  // function to randomly generate superfood
-  function makeSuperFood() {
-    for(let i = 0; i<10; i++) {
-      let superFoodIndex = Math.floor(Math.random()*$squares.length)
-      while (mazeArray.includes(superFoodIndex) || pacPosition === superFoodIndex || ghostPosition === superFoodIndex) {
-        superFoodIndex = Math.floor(Math.random()*$squares.length)
-      }
-      const superFoodLocation = $($squares[superFoodIndex])
-      superFoodLocation.addClass('big-food')
-      superFoodLocation.removeClass('food')
-    }
+  //--------------------PACMAN--------------------
+
+  // FUNCTION TO MAKE PACMAN
+  function makePac(){
+    $squares.eq(pacPosition)
+      .removeClass('food')
+      .addClass('pacman')
   }
 
-  // function to move pacman
+  // FUNCTION TO MOVE PACMAN
   function movePac(movement) {
     const newPosition = pacPosition + movement
     if (mazeArray.includes(newPosition)) return
@@ -211,64 +227,7 @@ $(() => {
     }
   }
 
-
-
-  function changeGhostsToBlue() {
-    blueGhosts = true
-    ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
-    setTimeout(showGhostAgain,3500)
-  }
-
-  // function changeGhostToEyes(){
-  //   // blueGhosts = true
-  //   ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('eyes'))
-  // }
-
-  function showGhostAgain(){
-    blueGhosts = false
-    ghostObjects.forEach(ghost => $squares.eq(ghost.position).removeClass('blue'))
-  }
-
-  //track score
-  function checkForPoints(location){
-    if (location.hasClass('food')) {
-      updateScore(10)
-    }
-    if (location.hasClass('big-food')) {
-      updateScore(50)
-      changeGhostsToBlue()
-    }
-    if (location.hasClass('ghost') && location.hasClass('blue')) {
-      updateScore(200)
-      location.addClass('eyes')
-    }
-    if (location.hasClass('ghost') && !location.hasClass('blue')) {
-      gameOver()
-    }
-  }
-
-  //update score
-  function updateScore(points) {
-    score += points
-    $scoreBoard.text(`Current Score ${score}`)
-  }
-
-  //end game
-  function gameOver(){
-    clearTimeout(blinkyInterval)
-    $board.hide()
-    $scoreBoard.hide()
-    $endScreen.show()
-    $endScreenHeader.text('Game Over!!!')
-    $endScreenPara.text(`You scored ${score} points`)
-    $(document).off('keydown')
-  }
-
-  function restartGame() {
-    welcomeToGame()
-  }
-
-  //allows movement
+  //  FUNCTION TO ALLOW MOVEMENT TO START ON KEYDOWN
   function startMovement(){
     $(document).on('keydown', e => {
       if (!pacMoves) return
@@ -295,7 +254,77 @@ $(() => {
     })
   }
 
+  //--------------------FOOD--------------------
+
+  //  FUNCTION TO GENERATE FOOD ON ALL SQUARES
+  function makeFood() {
+    $squares.addClass('food')
+  }
+
+  // FUNCTION TO GENERATE SUPERFOOD AT RANDOM INDEX
+  function makeSuperFood() {
+    for(let i = 0; i<10; i++) {
+      let superFoodIndex = Math.floor(Math.random()*$squares.length)
+      while (mazeArray.includes(superFoodIndex) || pacPosition === superFoodIndex || ghostPosition === superFoodIndex) {
+        superFoodIndex = Math.floor(Math.random()*$squares.length)
+      }
+      const superFoodLocation = $($squares[superFoodIndex])
+      superFoodLocation.addClass('big-food')
+      superFoodLocation.removeClass('food')
+    }
+  }
+
+
+  //--------------------SCORING--------------------
+
+  // FUNCTION TO CHECK IF PACMAN CURRENT LOCATION ADDS POINTS ETC
+  function checkForPoints(location){
+    if (location.hasClass('food')) {
+      updateScore(10)
+    }
+    if (location.hasClass('big-food')) {
+      updateScore(50)
+      changeGhostsToBlue()
+    }
+    if (location.hasClass('ghost') && location.hasClass('blue')) {
+      updateScore(200)
+      location.addClass('eyes')
+      clearTimeout(blueGhostTimer)
+    }
+    if (location.hasClass('ghost') && !location.hasClass('blue')) {
+      gameOver()
+    }
+  }
+
+  // FUNCTION TO UPDATE SCOREBOARD
+  function updateScore(points) {
+    score += points
+    $scoreBoard.text(`Current Score ${score}`)
+  }
+
+  //--------------------END GAME--------------------
+
+  // FUNCTION FOR GAMEOVER
+  function gameOver(){
+    clearTimeout(blinkyInterval)
+    $board.hide()
+    $scoreBoard.hide()
+    $endScreen.show()
+    $endScreenHeader.text('Game Over!!!')
+    $endScreenPara.text(`You scored ${score} points`)
+    $(document).off('keydown')
+  }
+
+  // FUNCTION TO RESTART GAME ON RESET BUTTON CLICK
+  function restartGame() {
+    welcomeToGame()
+  }
+
+
   welcomeToGame()
+
+  //-----------------------------------------EVENT LISTENERS-----------------------------------------
+
   //event listener to reset game on click
   $restartButton.on('click', restartGame)
   // event listener to start game on click
