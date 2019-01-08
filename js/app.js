@@ -1,6 +1,8 @@
 $(() => {
   console.log('js loaded')
+  //-----------------------------------------VARIABLES-----------------------------------------
   const width = 20
+  //----------Ghost Variables----------
   const ghostMovementOptions = [-1, 1, -width, width]
   let ghostPosition
   let newGhostPosition
@@ -32,8 +34,18 @@ $(() => {
       'direction': ''
     }
   ]
-
-  //-----------------------------------------VARIABLES-----------------------------------------
+  let clydeInterval
+  let blinkyInterval
+  let inkyInterval
+  let pinkyInterval
+  let blueGhosts
+  const directions = {
+    '-1': 'backward',
+    [`-${width}`]: 'up',
+    1: 'forward',
+    [`${width}`]: 'down'
+  }
+  //----------Board Variables----------
   const $board = $('.gameboard')
   const $scoreBoard = $('.score-board')
   const $endScreen = $('.game-over')
@@ -45,23 +57,13 @@ $(() => {
   const $startScreenPara = $startScreen.find('p')
   const $startButton = $('.start')
   const mazeArray = [26, 33, 46, 53, 66, 73, 86, 93, 101, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 118, 281, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 298, 306, 313, 326, 333, 346, 353, 366, 373]
-  const directions = {
-    '-1': 'backward',
-    [`-${width}`]: 'up',
-    1: 'forward',
-    [`${width}`]: 'down'
-  }
-  let pacPosition = 0
   let $squares
   let score = 0
-  let blueGhosts
+  //----------Pac Variables----------
+  let pacPosition = 0
   let pacMoves = true
   let pacInterval
-  //----------Ghost Variables----------
-  let clydeInterval
-  let blinkyInterval
-  let inkyInterval
-  let pinkyInterval
+
   //-----------------------------------------FUNCTIONS-----------------------------------------
 
   // welcomeToGame is called on page load and gives player option to start game on button click
