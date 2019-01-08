@@ -66,6 +66,7 @@ $(() => {
   let pacInterval
 
 
+
   //-----------------------------------------FUNCTIONS-----------------------------------------
 
   // welcomeToGame is called on page load and gives player option to start game on button click
@@ -93,9 +94,9 @@ $(() => {
     makeSuperFood()
     makeGhosts()
     clydeInterval = setInterval(() => moveGhost('orange'), 500)
-    blinkyInterval = setInterval(() => moveGhost('red'), 500)
-    inkyInterval = setInterval(() => moveGhost('cyan'), 500)
-    pinkyInterval = setInterval(() => moveGhost('pink'), 500)
+    blinkyInterval = setInterval(() => moveGhost('red'), 200)
+    inkyInterval = setInterval(() => moveGhost('cyan'), 700)
+    pinkyInterval = setInterval(() => moveGhost('pink'), 900)
     pacInterval = setInterval(() => pacMoves = true, 200)
   }
 
@@ -114,11 +115,46 @@ $(() => {
     const running = true
     let occupied = false
     const ghostPosition = $(`.gameboard .${ghostClass}.ghost`).index()
-    const newGhostPosition = ghostPosition + ghostDirections[ghostClass]
+    const currentPacPosition = $('.pacman').index()
+
 
     while (running) {
+      let chaseDirection
+      if(ghostPosition<currentPacPosition) chaseDirection = 3
+      else chaseDirection = 2
+      const positionDifference = ghostPosition - currentPacPosition
+      console.log('positionDifference',positionDifference)
+      //If were going up
+      if(chaseDirection===1){
+        //if diff is positive and less than one row
+        // pac is on this row and on out right
+        //go LEFT
+        if (positionDifference < 0 ){
+          chaseDirection = 1
+        }else //if diff is positive and less than one row
+        // pac is on this row and on out right
+        if (positionDifference < width && positionDifference > 0) chaseDirection = 0
 
-      ghostDirections[ghostClass] = ghostMovementOptions[Math.floor(Math.random()* 4)]
+
+      }
+
+      //If were going down
+      if(chaseDirection===2){
+        //if diff is negative and greater than minus width
+        //pac is on this row and on our left
+        //go Right
+        if (positionDifference < 0 ) {
+
+          chaseDirection = 1
+        }else //if diff is positive and less than one row
+        // pac is on this row and on out right
+        if (positionDifference < width && positionDifference > 0) chaseDirection = 0
+
+      }
+
+      ghostDirections[ghostClass] = ghostMovementOptions[chaseDirection]
+      const newGhostPosition = ghostPosition + ghostDirections[ghostClass]
+
 
       if($squares.eq(newGhostPosition).hasClass('ghost')){
         occupied = true
@@ -126,10 +162,10 @@ $(() => {
 
       if (
         mazeArray.includes(newGhostPosition) ||
-        newGhostPosition - width < 0 ||
-        newGhostPosition % width === 0 ||
-        newGhostPosition % width === width - 1 ||
-        newGhostPosition + width >= width*width ||
+        newGhostPosition - width < -width || //up
+        newGhostPosition % width === 0 || //left
+        newGhostPosition % width === width - 1 || //down
+        newGhostPosition + width >= width*width || //right
         occupied
       ){
         ghostDirections[ghostClass] = ghostMovementOptions[Math.floor(Math.random()* 4)]
@@ -142,8 +178,6 @@ $(() => {
       ghostObjects.find(ghost => ghost.color === ghostClass).direction = ghostDirections[ghostClass]
       const index = ghostObjects.findIndex(ghost => ghost.color === ghostClass)
       ghostObjects[index].position += ghostDirections[ghostClass]
-
-
 
       if(blueGhosts) $squares.eq(newGhostPosition).addClass('blue')
 
