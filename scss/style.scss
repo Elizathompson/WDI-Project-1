@@ -67,8 +67,21 @@ img {
   transform: rotate(270deg)
 }
 
+.gameboard div.pacman[data-step="0"] {
+  background-image: url('http://gamemakerlab.com/images/image_892016_8553.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 75%;
+}
+.gameboard div.pacman[data-step="1"] {
+  background-image: url('https://www.freeiconspng.com/uploads/pacman-png-9.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 75%;
+}
+
 div.pacman {
-  background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Pacman.svg/972px-Pacman.svg.png');
+  background-image: url('http://gamemakerlab.com/images/image_892016_8553.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 75%;

@@ -1,11 +1,8 @@
 $(() => {
-  console.log('js loaded')
   //-----------------------------------------VARIABLES-----------------------------------------
   const width = 20
   //----------Ghost Variables----------
   const ghostMovementOptions = [-1,1,-width,width]
-  let ghostPosition
-  let newGhostPosition
   const ghostDirections = {
     'orange': ghostMovementOptions[0],
     'red': ghostMovementOptions[1],
@@ -16,22 +13,26 @@ $(() => {
     {
       'color': 'orange',
       'position': 209,
-      'direction': ''
+      'direction': '',
+      'eyes': false
     },
     {
       'color': 'red',
       'position': 190,
-      'direction': ''
+      'direction': '',
+      'eyes': false
     },
     {
       'color': 'cyan',
       'position': 210,
-      'direction': ''
+      'direction': '',
+      'eyes': false
     },
     {
       'color': 'pink',
       'position': 189,
-      'direction': ''
+      'direction': '',
+      'eyes': false
     }
   ]
   let clydeInterval
@@ -40,6 +41,17 @@ $(() => {
   let pinkyInterval
   let blueGhosts
   let blueGhostTimer
+  let ghostEyes
+  const clydeStart = 209
+  const blinkyStart = 190
+  const inkyStart = 210
+  const pinkyStart = 189
+  const ghostPositions = {
+    'orange': clydeStart,
+    'red': blinkyStart,
+    'cyan': inkyStart,
+    'pink': pinkyStart
+  }
   const directions = {
     '-1': 'backward',
     [`-${width}`]: 'up',
@@ -57,13 +69,15 @@ $(() => {
   const $startScreenHeader = $startScreen.find('h1')
   const $startScreenPara = $startScreen.find('p')
   const $startButton = $('.start')
-  const mazeArray = [46, 53, 66, 73, 86, 93, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 306, 313, 326, 333, 346, 353]
+  const mazeArray = [188, 208, 228, 229, 232, 212, 192, 231, 230, 46, 53, 66, 73, 86, 93, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 306, 313, 326, 333, 346, 353]
+  //0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380
   let $squares
   let score = 0
   //----------Pac Variables----------
-  let pacPosition = 0
+  let pacPosition = 21
   let pacMoves = true
   let pacInterval
+  let currentStep = 0
 
 
 
@@ -93,56 +107,78 @@ $(() => {
     startMovement()
     makeSuperFood()
     makeGhosts()
-    clydeInterval = setInterval(() => moveGhost('orange'), 500)
-    blinkyInterval = setInterval(() => moveGhost('red'), 200)
-    inkyInterval = setInterval(() => moveGhost('cyan'), 700)
-    pinkyInterval = setInterval(() => moveGhost('pink'), 900)
-    pacInterval = setInterval(() => pacMoves = true, 200)
+    clydeInterval = setInterval(() => moveGhost('orange'), 650)
+    // blinkyInterval = setInterval(() => moveGhost('red'), 400)
+    // inkyInterval = setInterval(() => moveGhost('cyan'), 700)
+    // pinkyInterval = setInterval(() => moveGhost('pink'), 900)
+    pacInterval = setInterval(() => pacMoves = true, 100)
   }
 
   //--------------------GHOSTS--------------------
 
   // FUNCTION TO MAKE THE GHOSTS AND START AT CERTAIN POSITION
   function makeGhosts(){
-    $squares.eq(209).addClass('orange ghost')
-    $squares.eq(190).addClass('red ghost')
-    $squares.eq(210).addClass('cyan ghost')
-    $squares.eq(189).addClass('pink ghost')
+    $squares.eq(clydeStart).addClass('orange ghost')
+    // $squares.eq(blinkyStart).addClass('red ghost')
+    // $squares.eq(inkyStart).addClass('cyan ghost')
+    // $squares.eq(pinkyStart).addClass('pink ghost')
   }
+
+
 
   //FUNCTION TO MOVE THE GHOSTS
   function moveGhost(ghostClass) {
-    const ghostPosition = $(`.gameboard .${ghostClass}.ghost`).index()
+    const ghostPosition = ghostPositions[ghostClass]
     const pacPosition = $('.pacman').index()
-    let attempts = 20
+    let attempts = 50
     let newGhostPosition = getPossibleMove(ghostPosition)
     const ghostIsBlue = $squares.eq(ghostPosition).hasClass('blue')
+    const eyesCurrentPosition = $squares.eq(ghostPosition).hasClass('eyes')
 
+    // before while loop, if the move selected is included in the maze array,
+    // and ignore the move is intelligent check, just do it
+
+    // if next to wall, and the move is valid, keep going the same direction...
     while(
       !moveIsValid(newGhostPosition) ||
       !moveIsIntelligent(ghostPosition, newGhostPosition, pacPosition, ghostIsBlue)
+      // !moveIsIntelligent(ghostPosition, newGhostPosition, clydeStart, !eyesCurrentPosition)
     ) {
       newGhostPosition = getPossibleMove(ghostPosition)
       attempts--
 
-      if(!attempts) return false
+      if(!attempts) break
     }
 
-    $squares.eq(ghostPosition).removeClass(`${ghostClass} ghost blue`)
-    $squares.eq(newGhostPosition).addClass(`${ghostClass} ghost`)
+    while(
+      !moveIsValid(newGhostPosition)
+    ) {
+      newGhostPosition = getPossibleMove(ghostPosition)
+    }
 
     ghostObjects.find(ghost => ghost.color === ghostClass).direction = ghostDirections[ghostClass]
     const index = ghostObjects.findIndex(ghost => ghost.color === ghostClass)
     ghostObjects[index].position += ghostDirections[ghostClass]
 
+    $squares.eq(ghostPosition).removeClass(`${ghostClass} ghost blue`)
+    $squares.eq(newGhostPosition).addClass(`${ghostClass} ghost`)
     if(blueGhosts) $squares.eq(newGhostPosition).addClass('blue')
+    if(eyesCurrentPosition)  $squares.eq(newGhostPosition).addClass('eyes')
 
     if ($squares.eq(newGhostPosition).hasClass('pacman')) gameOver()
+
+    ghostPositions[ghostClass] = newGhostPosition
   }
 
   // FUNCTION TO FIND THE NEXT MOVE FOR THE GHOSTS
   function getPossibleMove(ghostPosition) {
-    return ghostMovementOptions[Math.floor(Math.random() * ghostMovementOptions.length)] + ghostPosition
+    const wallPosition = getWallPosition(ghostPosition)
+    const possibleMoves = ghostMovementOptions.filter(index => Math.abs(index) !== wallPosition)
+    return possibleMoves[Math.floor(Math.random() * possibleMoves.length)] + ghostPosition
+  }
+
+  function getWallPosition(ghostPosition) {
+    return ghostMovementOptions.find(index => $squares.eq(ghostPosition+index).hasClass('wall'))
   }
 
   // FUNCTION TO CHECK IF THE GHOST IS ALLOWED TO MOVE TO NEXT POSITION SELECTED
@@ -163,11 +199,10 @@ $(() => {
   }
 
   // FUNCTION TO CHECK IF MOVE IS TOWARDS PAC OR AWAY FROM PAC WHEN BLUE
-  function moveIsIntelligent(currentPosition, newPosition, pacPosition, isBlue) {
-    if(isBlue) return Math.abs(currentPosition - pacPosition) < Math.abs(newPosition - pacPosition)
-    return Math.abs(currentPosition - pacPosition) > Math.abs(newPosition - pacPosition)
+  function moveIsIntelligent(currentPosition, newPosition, destination, ghostClassIs) {
+    if(ghostClassIs) return Math.abs(currentPosition - destination) < Math.abs(newPosition - destination)
+    return Math.abs(currentPosition - destination) > Math.abs(newPosition - destination)
   }
-
 
   //FUNCTION TO TURN THE GHOSTS BLUE - CALLED IN POINTS FUNCTION WHEN SUPERFOOD IS EATEN
   function changeGhostsToBlue() {
@@ -175,12 +210,6 @@ $(() => {
     ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
     blueGhostTimer = setTimeout(showGhostAgain,3500)
   }
-
-  // function changeGhostToEyes(location){
-  //   if ($squares.eq(location).hasClass('eyes')) {
-  //     setTimeout(8000)
-  //   }
-  // }
 
   //FUNCTION TO TURN THE GHOSTS BACK TO NORMAL AFTER BEING BLUE FOR SET TIME
   function showGhostAgain(){
@@ -225,6 +254,7 @@ $(() => {
 
   // FUNCTION TO MOVE PACMAN
   function movePac(movement) {
+    currentStep = currentStep === 1 ? 0 : currentStep + 1
     const newPosition = pacPosition + movement
     if (mazeArray.includes(newPosition)) return
     $squares.eq(pacPosition).removeClass('pacman')
@@ -235,6 +265,7 @@ $(() => {
       .removeClass('food')
       .removeClass('big-food')
       .attr('data-direction', directions[movement])
+      .attr('data-step', currentStep )
     // if pacsquare has class of any of the ghosts then run game over
     if (!$squares.toArray().some(square => square.classList.contains('food'))){
       setTimeout(gameOver(),1000)
@@ -279,7 +310,10 @@ $(() => {
   function makeSuperFood() {
     for(let i = 0; i<10; i++) {
       let superFoodIndex = Math.floor(Math.random()*$squares.length)
-      while (mazeArray.includes(superFoodIndex) || pacPosition === superFoodIndex || ghostPosition === superFoodIndex) {
+      while (
+        mazeArray.includes(superFoodIndex) ||
+        pacPosition === superFoodIndex ||
+        Object.values(ghostPositions).includes(superFoodIndex)) {
         superFoodIndex = Math.floor(Math.random()*$squares.length)
       }
       const superFoodLocation = $($squares[superFoodIndex])
