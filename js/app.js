@@ -1,6 +1,7 @@
 $(() => {
   //-----------------------------------------VARIABLES-----------------------------------------
   const width = 20
+  const pacChomp = document.querySelector('audio')
   //----------Ghost Variables----------
   const ghostMovementOptions = [-1,1,-width,width]
   const ghostDirections = {
@@ -11,25 +12,29 @@ $(() => {
   }
   const ghostObjects = [
     {
-      'color': 'orange',
-      'position': 209,
-      'direction': '',
-      'eyes': false
+      color: 'orange',
+      startPosition: 209,
+      position: 209,
+      direction: '',
+      eyes: false
     },
     {
       'color': 'red',
+      startPosition: 190,
       'position': 190,
       'direction': '',
       'eyes': false
     },
     {
       'color': 'cyan',
+      startPosition: 210,
       'position': 210,
       'direction': '',
       'eyes': false
     },
     {
       'color': 'pink',
+      startPosition: 189,
       'position': 189,
       'direction': '',
       'eyes': false
@@ -41,7 +46,7 @@ $(() => {
   let pinkyInterval
   let blueGhosts
   let blueGhostTimer
-  let ghostEyes
+  let eyesPosition
   const clydeStart = 209
   const blinkyStart = 190
   const inkyStart = 210
@@ -69,15 +74,16 @@ $(() => {
   const $startScreenHeader = $startScreen.find('h1')
   const $startScreenPara = $startScreen.find('p')
   const $startButton = $('.start')
-  const mazeArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 39, 59, 79, 99, 119, 139, 159, 179, 199, 219, 239, 259, 279, 299, 319, 339, 359, 379, 188, 208, 228, 229, 232, 212, 192, 231, 230, 302, 303, 304, 305, 306, 307, 312, 313, 314, 315, 316, 317, 42, 43, 44, 45, 62, 63, 64, 65, 47, 48, 67, 68, 54, 55, 56, 57, 74, 75, 76, 77, 51, 52, 71, 72, 102, 103, 104, 105, 142, 143, 144, 145, 107, 108, 109, 110, 111, 112, 114, 115, 116, 117, 154, 155, 156, 157, 352, 353, 354, 355, 356, 357, 342, 343, 344, 345, 346, 347, 349, 289,309, 329, 350, 330, 310, 290, 182, 183, 202, 222, 242, 262, 263, 243, 223, 203, 185, 205, 225, 245, 265, 195, 215, 235, 255, 275, 276, 256, 236, 216, 196, 197, 217, 237, 257, 277, 267, 272]
+  const mazeArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 39, 59, 79, 99, 119, 139, 159, 179, 199, 219, 239, 259, 279, 299, 319, 339, 359, 379, 302, 303, 304, 305, 306, 307, 312, 313, 314, 315, 316, 317, 42, 43, 44, 45, 62, 63, 64, 65, 47, 48, 67, 68, 54, 55, 56, 57, 74, 75, 76, 77, 51, 52, 71, 72, 102, 103, 104, 105, 142, 143, 144, 145, 107, 108, 109, 110, 111, 112, 114, 115, 116, 117, 154, 155, 156, 157, 352, 353, 354, 355, 356, 357, 342, 343, 344, 345, 346, 347, 349, 289,309, 329, 350, 330, 310, 290, 182, 183, 202, 222, 242, 262, 263, 243, 223, 203, 185, 205, 225, 245, 265, 195, 215, 235, 255, 275, 276, 256, 236, 216, 196, 197, 217, 237, 257, 277, 267, 272]
 
   let $squares
   let score = 0
   //----------Pac Variables----------
-  let pacPosition = 21
+  let pacPosition = 270
   let pacMoves = true
   let pacInterval
   let currentStep = 0
+  let playing = true
 
 
 
@@ -99,6 +105,7 @@ $(() => {
     $scoreBoard.show()
     $startScreen.hide()
     $endScreen.hide()
+    resetGhostPositions()
     destroyBoard()
     createBoard()
     makeFood()
@@ -107,78 +114,97 @@ $(() => {
     startMovement()
     makeSuperFood()
     makeGhosts()
-    // clydeInterval = setInterval(() => moveGhost('orange'), 650)
-    // blinkyInterval = setInterval(() => moveGhost('red'), 400)
-    // inkyInterval = setInterval(() => moveGhost('cyan'), 700)
-    // pinkyInterval = setInterval(() => moveGhost('pink'), 900)
-    pacInterval = setInterval(() => pacMoves = true, 100)
+
+    setTimeout(() => {
+      clydeInterval = setInterval(() => moveGhost('orange'), 650)
+    }, 1000)
+    setTimeout(() => {
+      blinkyInterval = setInterval(() => moveGhost('red'), 300)
+    }, 4000)
+    setTimeout(() => {
+      inkyInterval = setInterval(() => moveGhost('cyan'), 800)
+    }, 2000)
+    setTimeout(() => {
+      pinkyInterval = setInterval(() => moveGhost('pink'), 1200)
+    }, 3000)
+    pacInterval = setInterval(() => pacMoves = true, 50)
   }
 
   //--------------------GHOSTS--------------------
 
+  // FUNTION TO RESET GHOST wallPositions
+
+  function resetGhostPositions() {
+    Object.values(ghostObjects).forEach(ghost => {
+      ghost.position = ghost.startPosition
+    })
+  }
+
   // FUNCTION TO MAKE THE GHOSTS AND START AT CERTAIN POSITION
   function makeGhosts(){
-    // $squares.eq(clydeStart).addClass('orange ghost')
-    // $squares.eq(blinkyStart).addClass('red ghost')
-    // $squares.eq(inkyStart).addClass('cyan ghost')
-    // $squares.eq(pinkyStart).addClass('pink ghost')
+    $squares.eq(ghostObjects[0].startPosition).addClass('orange ghost')
+    $squares.eq(ghostObjects[1].startPosition).addClass('red ghost')
+    $squares.eq(ghostObjects[2].startPosition).addClass('cyan ghost')
+    $squares.eq(ghostObjects[3].startPosition).addClass('pink ghost')
   }
 
 
 
   //FUNCTION TO MOVE THE GHOSTS
   function moveGhost(ghostClass) {
+    console.log('ghosts are blue',blueGhosts)
+    const ghostToMove = ghostObjects.find(ghost => ghost.color === ghostClass)
     const ghostPosition = ghostPositions[ghostClass]
     const pacPosition = $('.pacman').index()
-    let attempts = 50
     let newGhostPosition = getPossibleMove(ghostPosition)
-    const ghostIsBlue = $squares.eq(ghostPosition).hasClass('blue')
-    const eyesCurrentPosition = $squares.eq(ghostPosition).hasClass('eyes')
+    const eyesPosition = $squares.eq(ghostPosition).hasClass('eyes')
+    console.log('inside movement')
 
     // before while loop, if the move selected is included in the maze array,
     // and ignore the move is intelligent check, just do it
 
     // if next to wall, and the move is valid, keep going the same direction...
-    while(
-      !moveIsValid(newGhostPosition) ||
-      !moveIsIntelligent(ghostPosition, newGhostPosition, pacPosition, ghostIsBlue)
-      // !moveIsIntelligent(ghostPosition, newGhostPosition, clydeStart, !eyesCurrentPosition)
-    ) {
-      newGhostPosition = getPossibleMove(ghostPosition)
-      attempts--
-
-      if(!attempts) break
+    for (let x = 0; x < 20; x++) {
+      if (!moveIsValid(newGhostPosition) ||
+      !moveIsIntelligent(ghostPosition, newGhostPosition, pacPosition, blueGhosts) ||
+      !moveIsIntelligent(ghostPosition, newGhostPosition, ghostToMove.startPosition, !eyesPosition)
+      ) {
+        console.log('changing move to find intelligent one')
+        newGhostPosition = getPossibleMove(ghostPosition)
+      }
     }
 
-    while(
-      !moveIsValid(newGhostPosition)
-    ) {
-      newGhostPosition = getPossibleMove(ghostPosition)
+    for (let x = 0; x < 3; x++) {
+      if(
+        !moveIsValid(newGhostPosition)
+      ) {
+        console.log('ignoring intelligent move rule')
+        newGhostPosition = getPossibleMove(ghostPosition)
+      }
     }
 
-    ghostObjects.find(ghost => ghost.color === ghostClass).direction = ghostDirections[ghostClass]
-    const index = ghostObjects.findIndex(ghost => ghost.color === ghostClass)
-    ghostObjects[index].position += ghostDirections[ghostClass]
+    ghostToMove.direction = ghostDirections[ghostClass]
+    ghostToMove.position += ghostDirections[ghostClass]
 
     $squares.eq(ghostPosition).removeClass(`${ghostClass} ghost blue`)
     $squares.eq(newGhostPosition).addClass(`${ghostClass} ghost`)
     if(blueGhosts) $squares.eq(newGhostPosition).addClass('blue')
-    if(eyesCurrentPosition)  $squares.eq(newGhostPosition).addClass('eyes')
+    if(eyesPosition) $squares.eq(newGhostPosition).addClass('eyes')
 
-    if ($squares.eq(newGhostPosition).hasClass('pacman')) gameOver()
+    if ($squares.eq(newGhostPosition).hasClass('pacman') && !blueGhosts && !eyesPosition) gameOver()
 
     ghostPositions[ghostClass] = newGhostPosition
   }
 
   // FUNCTION TO FIND THE NEXT MOVE FOR THE GHOSTS
   function getPossibleMove(ghostPosition) {
-    const wallPosition = getWallPosition(ghostPosition)
-    const possibleMoves = ghostMovementOptions.filter(index => Math.abs(index) !== wallPosition)
+    const wallPositions = getWallPosition(ghostPosition)
+    const possibleMoves = ghostMovementOptions.filter(index => !wallPositions.includes(index))
     return possibleMoves[Math.floor(Math.random() * possibleMoves.length)] + ghostPosition
   }
 
   function getWallPosition(ghostPosition) {
-    return ghostMovementOptions.find(index => $squares.eq(ghostPosition+index).hasClass('wall'))
+    return ghostMovementOptions.filter(index => $squares.eq(ghostPosition+index).hasClass('wall'))
   }
 
   // FUNCTION TO CHECK IF THE GHOST IS ALLOWED TO MOVE TO NEXT POSITION SELECTED
@@ -207,15 +233,23 @@ $(() => {
   //FUNCTION TO TURN THE GHOSTS BLUE - CALLED IN POINTS FUNCTION WHEN SUPERFOOD IS EATEN
   function changeGhostsToBlue() {
     blueGhosts = true
-    ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
-    blueGhostTimer = setTimeout(showGhostAgain,3500)
+    // ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
+    setTimeout(() => {
+      blueGhosts = false
+    }, 3500)
   }
 
-  //FUNCTION TO TURN THE GHOSTS BACK TO NORMAL AFTER BEING BLUE FOR SET TIME
-  function showGhostAgain(){
-    blueGhosts = false
-    ghostObjects.forEach(ghost => $squares.eq(ghost.position).removeClass('blue'))
-  }
+  // function respawnGhost(){
+  //   eyesPosition === clydeStart)
+  //   ghostObjects.forEach(ghost => $squares.eq(ghost.position).removeClass('eyes'))
+  // }
+
+  //FUNCTION TO TURN THE GHOSTS BACK TO NORMAL AFTER BEING BLUE FOR SET TIME\
+  // DONT NEED THIS NOW SINCE ITS ALL HANDLED IN MOVEMENT CODE
+  // function showGhostAgain(){
+  //   blueGhosts = false
+  //   // ghostObjects.forEach(ghost => $squares.eq(ghost.position).removeClass('blue'))
+  // }
 
   //--------------------GAMEBOARD--------------------
 
@@ -230,7 +264,7 @@ $(() => {
 
   // FUNCTION TO CLEAR THE BOARD ON GAME RESET
   function destroyBoard() {
-    pacPosition = 0
+    pacPosition = 270
     score = 0
     $board.empty()
   }
@@ -251,6 +285,16 @@ $(() => {
       .removeClass('food')
       .addClass('pacman')
   }
+
+  function playChomp(){
+    if (playing === true) {
+      pacChomp.src = 'assets/pacman_chomp (1).wav'
+      pacChomp.play()
+      playing = false
+    } pacChomp.addEventListener('ended', () => playing = true )
+  }
+
+
 
   // FUNCTION TO MOVE PACMAN
   function movePac(movement) {
@@ -329,6 +373,7 @@ $(() => {
   function checkForPoints(location){
     if (location.hasClass('food')) {
       updateScore(10)
+      playChomp()
     }
     if (location.hasClass('big-food')) {
       updateScore(50)
@@ -339,7 +384,7 @@ $(() => {
       location.addClass('eyes')
       clearTimeout(blueGhostTimer)
     }
-    if (location.hasClass('ghost') && !location.hasClass('blue')) {
+    if (location.hasClass('ghost') && !location.hasClass('blue') && !location.hasClass('eyes')) {
       gameOver()
     }
   }
@@ -381,6 +426,8 @@ $(() => {
   $restartButton.on('click', restartGame)
   // event listener to start game on click
   $startButton.on('click', startGame)
+
+  // $(document).on('keydown', playChomp)
 
 
 })
