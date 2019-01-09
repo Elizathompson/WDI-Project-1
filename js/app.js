@@ -69,8 +69,8 @@ $(() => {
   const $startScreenHeader = $startScreen.find('h1')
   const $startScreenPara = $startScreen.find('p')
   const $startButton = $('.start')
-  const mazeArray = [188, 208, 228, 229, 232, 212, 192, 231, 230, 46, 53, 66, 73, 86, 93, 102, 103, 104, 105, 106, 113, 114, 115, 116, 117, 282, 283, 284, 285, 286, 293, 294, 295, 296, 297, 306, 313, 326, 333, 346, 353]
-  //0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380
+  const mazeArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 39, 59, 79, 99, 119, 139, 159, 179, 199, 219, 239, 259, 279, 299, 319, 339, 359, 379, 188, 208, 228, 229, 232, 212, 192, 231, 230, 302, 303, 304, 305, 306, 307, 312, 313, 314, 315, 316, 317, 42, 43, 44, 45, 62, 63, 64, 65, 47, 48, 67, 68, 54, 55, 56, 57, 74, 75, 76, 77, 51, 52, 71, 72, 102, 103, 104, 105, 142, 143, 144, 145, 107, 108, 109, 110, 111, 112, 114, 115, 116, 117, 154, 155, 156, 157, 352, 353, 354, 355, 356, 357, 342, 343, 344, 345, 346, 347, 349, 289,309, 329, 350, 330, 310, 290, 182, 183, 202, 222, 242, 262, 263, 243, 223, 203, 185, 205, 225, 245, 265, 195, 215, 235, 255, 275, 276, 256, 236, 216, 196, 197, 217, 237, 257, 277, 267, 272]
+
   let $squares
   let score = 0
   //----------Pac Variables----------
@@ -107,7 +107,7 @@ $(() => {
     startMovement()
     makeSuperFood()
     makeGhosts()
-    clydeInterval = setInterval(() => moveGhost('orange'), 650)
+    // clydeInterval = setInterval(() => moveGhost('orange'), 650)
     // blinkyInterval = setInterval(() => moveGhost('red'), 400)
     // inkyInterval = setInterval(() => moveGhost('cyan'), 700)
     // pinkyInterval = setInterval(() => moveGhost('pink'), 900)
@@ -118,7 +118,7 @@ $(() => {
 
   // FUNCTION TO MAKE THE GHOSTS AND START AT CERTAIN POSITION
   function makeGhosts(){
-    $squares.eq(clydeStart).addClass('orange ghost')
+    // $squares.eq(clydeStart).addClass('orange ghost')
     // $squares.eq(blinkyStart).addClass('red ghost')
     // $squares.eq(inkyStart).addClass('cyan ghost')
     // $squares.eq(pinkyStart).addClass('pink ghost')
