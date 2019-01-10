@@ -66,7 +66,7 @@ $(() => {
   //----------Board Variables----------
   const $board = $('.gameboard')
   const $scoreBoard = $('.score-board')
-  const $endScreen = $('.game-over')
+  const $endScreen = $('.end')
   const $endScreenHeader = $endScreen.find('h2')
   const $endScreenPara = $endScreen.find('p')
   const $restartButton = $('.restart')
@@ -113,10 +113,7 @@ $(() => {
     $startScreen.hide()
     $endScreen.hide()
     resetGhostPositions()
-
-
     startMovement()
-
 
     setTimeout(() => {
       clydeInterval = setInterval(() => moveGhost('orange'), 650)
@@ -404,10 +401,10 @@ $(() => {
     clearInterval(inkyInterval)
     clearInterval(pinkyInterval)
     clearInterval(pacInterval)
-    $board.hide()
+    // $board.hide()
     $scoreBoard.hide()
     $endScreen.show()
-    $endScreenHeader.text('Game Over!!!')
+    $endScreenHeader.text('Game Over')
     $endScreenPara.text(`You scored ${score} points`)
     $(document).off('keydown')
   }
