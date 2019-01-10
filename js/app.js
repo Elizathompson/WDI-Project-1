@@ -95,11 +95,21 @@ $(() => {
 
   // startGame is called when $startButton is clicked
   function startGame() {
-    // $board.show()
     $scoreBoard.show()
     $startScreen.hide()
     $endScreen.hide()
-    startGhosts()
+    let i = 3
+    const $countdown = $('<div />').addClass('countdown')
+    $countdown.appendTo('.main')
+    const startCountdown = setInterval(() => {
+      $countdown.text(i)
+      i --
+      if (i < 0) {
+        $countdown.css('display', 'none')
+        startGhosts()
+        clearInterval(startCountdown)
+      }
+    }, 1000)
   }
 
   //--------------------GHOSTS--------------------

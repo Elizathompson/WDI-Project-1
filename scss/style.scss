@@ -222,6 +222,15 @@ div.message {
   background-color: black;
 }
 
+.countdown {
+  position: absolute;
+  top: 35%;
+  left: calc(50vw - 25px);
+  width: 50px;
+  font-size: 50px;
+  color: white;
+}
+
 h1 {
   padding: 10px;
   font-size: 30px;
