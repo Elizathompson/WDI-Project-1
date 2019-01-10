@@ -93,7 +93,7 @@ $(() => {
   function welcomeToGame(){
     $startScreen.show()
     // $board.hide()
-    $scoreBoard.hide()
+    $scoreBoard.show()
     $endScreen.hide()
     $startScreenHeader.text('Welcome to Pac Man')
     $startScreenPara.text('Click the button to start the game')

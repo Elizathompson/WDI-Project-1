@@ -15,6 +15,13 @@ img {
   max-width: 600px;
 }
 
+img.ghosts{
+  width: 350px;
+  position: absolute;
+  margin-left: 75px;
+  margin-top: 200px;
+}
+
 button.start {
   padding: 7px;
   color: #c20ed5;
@@ -134,9 +141,9 @@ div.wall {
 }
 
 div.orange.ghost {
-  background-image: url('https://pngimage.net/wp-content/uploads/2018/06/pacman-ghost-png-2.png');
+  background-image: url('https://i.gifer.com/origin/00/00c330154483d2b2e3162e95ce7be2ba_w200.gif');
   background-position: center;
-  background-size: contain;
+  background-size: 78%;
   background-repeat: no-repeat;
   &.blue{
     background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
@@ -147,9 +154,9 @@ div.orange.ghost {
 }
 
 div.red.ghost {
-  background-image: url('https://hanslodge.com/img/1865523.png');
+  background-image: url('http://pa1.narvii.com/6762/031cecba98dce3de84d48de416137dde0d234897_00.gif');
   background-position: center;
-  background-size: contain;
+  background-size: 74%;
   background-repeat: no-repeat;
   &.blue{
     background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
@@ -160,9 +167,10 @@ div.red.ghost {
 }
 
 div.cyan.ghost {
-  background-image: url('https://img.fireden.net/v/image/1512/44/1512440069164.png');
+  background-image: url('https://orig00.deviantart.net/f745/f/2013/021/d/3/1inkyghost_by_camdencc-d5sab38.gif');
   background-position: center;
-  background-size: contain;
+  background-size: 86%;
+  transform: scaleX(-1);
   background-repeat: no-repeat;
   &.blue{
     background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
@@ -173,10 +181,11 @@ div.cyan.ghost {
 }
 
 div.pink.ghost {
-  background-image: url('https://t7.rbxcdn.com/4b92f11a3b72ec0394c796a7b894d60f');
+  background-image: url('https://i.gifer.com/origin/d5/d5b9ae79f5254caaf0fdcf2affcec5b0_w200.gif');
   background-position: center;
-  background-size: contain;
+  background-size: 88%;
   background-repeat: no-repeat;
+  transform: scaleX(-1);
   &.blue{
     background-image: url('https://media.giphy.com/media/r8AKGSaw7qRRS/200.gif');
   }
@@ -206,7 +215,7 @@ div.message {
   font-weight: 5px;
   text-align: center;
   margin: auto;
-  margin-top: 175px;
+  margin-top: 150px;
   width: 650px;
   height: 400px;
   border: 4px dotted white;
