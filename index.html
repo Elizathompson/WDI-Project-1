@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
   <title>PAC MAN</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -14,18 +15,30 @@
 
   <div class="score-board">Current Score 0</div>
 
-  <div class="welcome">
-    <h1></h1>
-    <p></p>
-    <button class="start">Start Game</button>
-  </div>
+  <div class="main">
+    <div class="welcome">
+      <div class="message">
+        <h1></h1>
+        <h3>Instructions</h3>
+        <ul>
+          <li>Eat as much food as you can</li>
+          <li>If you run into a Ghost it is Game Over</li>
+          <li>Eat the flashing food for extra points</li>
+          <li>Flashing food will turn the Ghosts blue</li>
+          <li>Eat a Blue Ghost for Bonus points</li>
+        </ul>
+        <p></p>
+      </div>
+      <button class="start">Start Game</button>
+    </div>
 
-  <div class="gameboard"></div>
-  <audio src="assets/pacman_chomp (1).wav"></audio>
-  <div class="game-over">
-    <h2></h2>
-    <p></p>
-    <button class="restart">Restart Game</button>
+    <div class="gameboard"></div>
+    <audio src="assets/pacman_chomp (1).wav"></audio>
+    <div class="game-over">
+      <h2></h2>
+      <p></p>
+      <button class="restart">Restart Game</button>
+    </div>
   </div>
 </body>
 

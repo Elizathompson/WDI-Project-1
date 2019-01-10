@@ -92,28 +92,31 @@ $(() => {
   // welcomeToGame is called on page load and gives player option to start game on button click
   function welcomeToGame(){
     $startScreen.show()
-    $board.hide()
+    // $board.hide()
     $scoreBoard.hide()
     $endScreen.hide()
     $startScreenHeader.text('Welcome to Pac Man')
     $startScreenPara.text('Click the button to start the game')
-  }
-
-  // startGame is called when $startButton is clicked
-  function startGame() {
-    $board.show()
-    $scoreBoard.show()
-    $startScreen.hide()
-    $endScreen.hide()
-    resetGhostPositions()
     destroyBoard()
     createBoard()
     makeFood()
     makePac()
     createMaze()
-    startMovement()
     makeSuperFood()
     makeGhosts()
+  }
+
+  // startGame is called when $startButton is clicked
+  function startGame() {
+    // $board.show()
+    $scoreBoard.show()
+    $startScreen.hide()
+    $endScreen.hide()
+    resetGhostPositions()
+
+
+    startMovement()
+
 
     setTimeout(() => {
       clydeInterval = setInterval(() => moveGhost('orange'), 650)

@@ -1,3 +1,7 @@
+* {
+  font-family: 'Press Start 2P', cursive;
+}
+
 body {
   background: black;
 }
@@ -10,12 +14,23 @@ img {
   max-height: 400px;
   max-width: 600px;
 }
+
+button.start {
+  padding: 5px;
+  color: #c20ed5;
+  font-size: 30px;
+  margin-top: 30px;
+  margin-left: 730px;
+  background-color: transparent;
+  border: 4px dotted white;
+}
 .score-board {
   color: white;
   font-size: 30px;
   font-weight: bold;
   text-align: center;
   margin-top: 25px;
+  font-family: inherit;
 }
 
 .gameboard {
@@ -29,7 +44,6 @@ img {
   div {
     width: 100px;
     height: 100px;
-    // border: 1px solid black;
     margin: auto;
   }
 }
@@ -169,13 +183,59 @@ div.game-over {
   margin-top: 300px;
 }
 
-div.welcome {
-  color: white;
-  font-size: 20px;
-  font-weight: 20px;
-  text-align: center;
-  margin-top: 250px;
+div.main {
+  display: flex;
+  position: relative;
 }
+
+div.welcome {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: rgba(0,0,0,0.75);
+}
+
+div.message {
+  color: white;
+  font-size: 13px;
+  font-weight: 5px;
+  text-align: center;
+  margin: auto;
+  margin-top: 175px;
+  width: 650px;
+  height: 400px;
+  border: 4px dotted white;
+  background-color: black;
+}
+
+h1 {
+  padding: 10px;
+  font-size: 30px;
+  color: #c20ed5;
+}
+
+h3 {
+  font-size: 20px;
+  padding: 10px;
+}
+
+p {
+  padding-top: 35px;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  padding: 10px;
+  color: #00ffbf;
+}
+
+
 @-moz-keyframes blink {
     0% {
         opacity:1;
