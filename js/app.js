@@ -160,10 +160,7 @@ $(() => {
     const eyesPosition = $squares.eq(ghostPosition).hasClass('eyes')
     console.log('inside movement')
 
-    // before while loop, if the move selected is included in the maze array,
-    // and ignore the move is intelligent check, just do it
 
-    // if next to wall, and the move is valid, keep going the same direction...
     for (let x = 0; x < 20; x++) {
       if (!moveIsValid(newGhostPosition) ||
       !moveIsIntelligent(ghostPosition, newGhostPosition, pacPosition, blueGhosts) ||
