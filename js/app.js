@@ -1,7 +1,7 @@
 $(() => {
   //-----------------------------------------VARIABLES-----------------------------------------
   const width = 20
-  const pacChomp = document.querySelector('audio')
+  const pacChomp = document.querySelector('.eat')
   //----------Ghost Variables----------
   const ghostMovementOptions = [-1,1,-width,width]
   let blueTimerId = 0
@@ -274,13 +274,20 @@ $(() => {
       .addClass('pacman')
   }
 
-  function playChomp(){
+  function playChomp(fileName){
     if (playing === true) {
-      pacChomp.src = 'assets/pacman_chomp (1).wav'
+      pacChomp.src = `assets/${fileName}.wav`
+      pacChomp.currentTime = 0
       pacChomp.play()
       playing = false
     } pacChomp.addEventListener('ended', () => playing = true )
   }
+
+  function playDeath() {
+    pacChomp.pause()
+    document.querySelector('.death').play()
+  }
+
 
   // FUNCTION TO MOVE PACMAN
   function movePac(movement) {
@@ -302,7 +309,7 @@ $(() => {
       !$pacSquare.hasClass('blue') &&
       !$pacSquare.hasClass('eyes')
     ){
-      setTimeout(gameOver, 1000)
+      gameOver()
     }
   }
 
@@ -351,7 +358,7 @@ $(() => {
     console.log(ghost)
     if ($square.hasClass('food')) {
       updateScore(10)
-      playChomp()
+      playChomp('pacman_chomp (1)')
     }
     if ($square.hasClass('big-food')) {
       updateScore(50)
@@ -363,8 +370,8 @@ $(() => {
       ghost.eyes = true
     }
     if ($square.hasClass('ghost') && !$square.hasClass('blue') && !$square.hasClass('eyes')) {
-      console.log('PAC THINKS ITS GAME OVER')
       gameOver()
+
     }
   }
 
@@ -378,14 +385,19 @@ $(() => {
 
   // FUNCTION FOR GAMEOVER
   function gameOver(){
+    playDeath()
+    // pacChomp.pause()
+    // document.querySelector('.death').play()
     Object.keys(ghostInfo).forEach(ghostClass => {
       clearInterval(ghostInfo[ghostClass].timerId)
     })
     clearInterval(pacInfo.timerId)
     $scoreBoard.hide()
-    $endScreen.show()
-    $endScreenHeader.text('Game Over')
-    $endScreenPara.text(`You scored ${score} points`)
+    setTimeout(() => {
+      $endScreen.show()
+      $endScreenHeader.text('Game Over')
+      $endScreenPara.text(`You scored ${score} points`)
+    },500)
   }
 
   // FUNCTION TO RESTART GAME ON RESET BUTTON CLICK
