@@ -4,58 +4,51 @@ $(() => {
   const pacChomp = document.querySelector('audio')
   //----------Ghost Variables----------
   const ghostMovementOptions = [-1,1,-width,width]
-  const ghostDirections = {
-    'orange': ghostMovementOptions[0],
-    'red': ghostMovementOptions[1],
-    'cyan': ghostMovementOptions[2],
-    'pink': ghostMovementOptions[3]
-  }
-  const ghostObjects = [
-    {
-      color: 'orange',
+  let blueTimerId = 0
+  const ghostInfo = {
+    orange: {
       startPosition: 209,
       position: 209,
-      direction: '',
-      eyes: false
+      direction: -1,
+      eyes: false,
+      blue: false,
+      timerId: 0,
+      speed: 650
     },
-    {
-      'color': 'red',
+    red: {
       startPosition: 190,
-      'position': 190,
-      'direction': '',
-      'eyes': false
+      position: 190,
+      direction: 1,
+      eyes: false,
+      blue: false,
+      timerId: 0,
+      speed: 500
     },
-    {
-      'color': 'cyan',
+    cyan: {
       startPosition: 210,
-      'position': 210,
-      'direction': '',
-      'eyes': false
+      position: 210,
+      direction: -width,
+      eyes: false,
+      blue: false,
+      timerId: 0,
+      speed: 300
     },
-    {
-      'color': 'pink',
+    pink: {
       startPosition: 189,
-      'position': 189,
-      'direction': '',
-      'eyes': false
+      position: 189,
+      direction: width,
+      eyes: false,
+      blue: false,
+      timerId: 0,
+      speed: 800
     }
-  ]
-  let clydeInterval
-  let blinkyInterval
-  let inkyInterval
-  let pinkyInterval
-  let blueGhosts
-  let blueGhostTimer
-  let eyesPosition
-  const clydeStart = 209
-  const blinkyStart = 190
-  const inkyStart = 210
-  const pinkyStart = 189
-  const ghostPositions = {
-    'orange': clydeStart,
-    'red': blinkyStart,
-    'cyan': inkyStart,
-    'pink': pinkyStart
+  }
+  const pacInfo = {
+    startPosition: 270,
+    position: 270,
+    currentStep: 0,
+    canMove: true,
+    timerId: 0
   }
   const directions = {
     '-1': 'backward',
@@ -78,17 +71,11 @@ $(() => {
 
   let $squares
   let score = 0
+
   //----------Pac Variables----------
-  let pacPosition = 270
-  let pacMoves = true
-  let pacInterval
-  let currentStep = 0
   let playing = true
 
-
-
   //-----------------------------------------FUNCTIONS-----------------------------------------
-
   // welcomeToGame is called on page load and gives player option to start game on button click
   function welcomeToGame(){
     $startScreen.show()
@@ -99,11 +86,11 @@ $(() => {
     $startScreenPara.text('Click the button to start the game')
     destroyBoard()
     createBoard()
-    makeFood()
+    updateScore(0)
     makePac()
     createMaze()
-    makeSuperFood()
     makeGhosts()
+    makeSuperFood()
   }
 
   // startGame is called when $startButton is clicked
@@ -112,85 +99,96 @@ $(() => {
     $scoreBoard.show()
     $startScreen.hide()
     $endScreen.hide()
-    resetGhostPositions()
-    startMovement()
-
-    setTimeout(() => {
-      clydeInterval = setInterval(() => moveGhost('orange'), 650)
-    }, 1000)
-    setTimeout(() => {
-      blinkyInterval = setInterval(() => moveGhost('red'), 300)
-    }, 4000)
-    setTimeout(() => {
-      inkyInterval = setInterval(() => moveGhost('cyan'), 800)
-    }, 2000)
-    setTimeout(() => {
-      pinkyInterval = setInterval(() => moveGhost('pink'), 1200)
-    }, 3000)
-    pacInterval = setInterval(() => pacMoves = true, 50)
+    startGhosts()
   }
 
   //--------------------GHOSTS--------------------
 
-  // FUNTION TO RESET GHOST wallPositions
+  // FUNTION TO RESET GHOST POSITIONS
+
+  function startGhosts() {
+    resetGhostPositions()
+    Object.keys(ghostInfo).forEach((ghostClass, i) => {
+      setTimeout(() => {
+        ghostInfo[ghostClass].timerId = setInterval(() => {
+          moveGhost(ghostClass)
+        }, ghostInfo[ghostClass].speed)
+      }, 1000 * (i+1))
+    })
+  }
 
   function resetGhostPositions() {
-    Object.values(ghostObjects).forEach(ghost => {
-      ghost.position = ghost.startPosition
+    Object.keys(ghostInfo).forEach(ghostClass => {
+      ghostInfo[ghostClass].position = ghostInfo[ghostClass].startPosition
     })
   }
 
   // FUNCTION TO MAKE THE GHOSTS AND START AT CERTAIN POSITION
   function makeGhosts(){
-    $squares.eq(ghostObjects[0].startPosition).addClass('orange ghost')
-    $squares.eq(ghostObjects[1].startPosition).addClass('red ghost')
-    $squares.eq(ghostObjects[2].startPosition).addClass('cyan ghost')
-    $squares.eq(ghostObjects[3].startPosition).addClass('pink ghost')
+    Object.keys(ghostInfo).forEach(ghostClass => {
+      $squares.eq(ghostInfo[ghostClass].startPosition).addClass(`${ghostClass} ghost`)
+    })
   }
 
-
-
-  //FUNCTION TO MOVE THE GHOSTS
-  function moveGhost(ghostClass) {
-    console.log('ghosts are blue',blueGhosts)
-    const ghostToMove = ghostObjects.find(ghost => ghost.color === ghostClass)
-    const ghostPosition = ghostPositions[ghostClass]
-    const pacPosition = $('.pacman').index()
-    let newGhostPosition = getPossibleMove(ghostPosition)
-    const eyesPosition = $squares.eq(ghostPosition).hasClass('eyes')
-    console.log('inside movement')
-
-
+  function makeIntelligentMove(currentPosition, newPosition, destination, isToward) {
     for (let x = 0; x < 20; x++) {
-      if (!moveIsValid(newGhostPosition) ||
-      !moveIsIntelligent(ghostPosition, newGhostPosition, pacPosition, blueGhosts) ||
-      !moveIsIntelligent(ghostPosition, newGhostPosition, ghostToMove.startPosition, !eyesPosition)
+      if (
+        !moveIsIntelligent(currentPosition, newPosition, destination, isToward) ||
+        !moveIsValid(newPosition)
       ) {
-        console.log('changing move to find intelligent one')
-        newGhostPosition = getPossibleMove(ghostPosition)
+        newPosition = getPossibleMove(currentPosition)
       }
     }
 
     for (let x = 0; x < 3; x++) {
-      if(
-        !moveIsValid(newGhostPosition)
-      ) {
-        console.log('ignoring intelligent move rule')
-        newGhostPosition = getPossibleMove(ghostPosition)
+      if(!moveIsValid(newPosition)) {
+        newPosition = getPossibleMove(currentPosition)
       }
     }
 
-    ghostToMove.direction = ghostDirections[ghostClass]
-    ghostToMove.position += ghostDirections[ghostClass]
+    return newPosition
+  }
 
-    $squares.eq(ghostPosition).removeClass(`${ghostClass} ghost blue`)
-    $squares.eq(newGhostPosition).addClass(`${ghostClass} ghost`)
-    if(blueGhosts) $squares.eq(newGhostPosition).addClass('blue')
-    if(eyesPosition) $squares.eq(newGhostPosition).addClass('eyes')
+  //FUNCTION TO MOVE THE GHOSTS
+  function moveGhost(ghostClass) {
+    const ghostToMove = ghostInfo[ghostClass]
+    let newGhostPosition = getPossibleMove(ghostToMove.position)
+    const $currentGhostSquare = $squares.eq(ghostToMove.position)
 
-    if ($squares.eq(newGhostPosition).hasClass('pacman') && !blueGhosts && !eyesPosition) gameOver()
+    if(ghostToMove.blue) {
+      newGhostPosition = makeIntelligentMove(ghostToMove.position, newGhostPosition, pacInfo.position, false)
+    } else if(ghostToMove.eyes) {
+      newGhostPosition = makeIntelligentMove(ghostToMove.position, newGhostPosition, ghostToMove.startPosition, true)
+    } else {
+      newGhostPosition = makeIntelligentMove(ghostToMove.position, newGhostPosition, pacInfo.position, true)
+    }
 
-    ghostPositions[ghostClass] = newGhostPosition
+    const $newGhostSquare = $squares.eq(newGhostPosition)
+
+    $newGhostSquare.addClass(`${ghostClass} ghost`)
+    if(ghostToMove.blue) $newGhostSquare.addClass('blue')
+    if(ghostToMove.eyes) $newGhostSquare.addClass('eyes')
+
+    if(
+      (ghostToMove.position === ghostToMove.startPosition) &&
+      $newGhostSquare.hasClass('eyes')
+    ) {
+      $newGhostSquare.removeClass('blue eyes')
+      ghostToMove.blue = false
+      ghostToMove.eyes = false
+    }
+
+    if (
+      $currentGhostSquare.hasClass('pacman') &&
+      !$currentGhostSquare.hasClass('blue') &&
+      !$currentGhostSquare.hasClass('eyes')
+    ) {
+      gameOver()
+    }
+
+    $currentGhostSquare.removeClass(`${ghostClass} ghost blue eyes`)
+
+    ghostToMove.position = newGhostPosition
   }
 
   // FUNCTION TO FIND THE NEXT MOVE FOR THE GHOSTS
@@ -222,46 +220,39 @@ $(() => {
   }
 
   // FUNCTION TO CHECK IF MOVE IS TOWARDS PAC OR AWAY FROM PAC WHEN BLUE
-  function moveIsIntelligent(currentPosition, newPosition, destination, ghostClassIs) {
-    if(ghostClassIs) return Math.abs(currentPosition - destination) < Math.abs(newPosition - destination)
-    return Math.abs(currentPosition - destination) > Math.abs(newPosition - destination)
+  function moveIsIntelligent(currentPosition, newPosition, destination, moveToward) {
+    if(moveToward) return Math.abs(currentPosition - destination) > Math.abs(newPosition - destination)
+    return Math.abs(currentPosition - destination) < Math.abs(newPosition - destination)
   }
 
   //FUNCTION TO TURN THE GHOSTS BLUE - CALLED IN POINTS FUNCTION WHEN SUPERFOOD IS EATEN
   function changeGhostsToBlue() {
-    blueGhosts = true
-    // ghostObjects.forEach(ghost => $squares.eq(ghost.position).addClass('blue'))
-    setTimeout(() => {
-      blueGhosts = false
+    clearTimeout(blueTimerId)
+
+    $('.ghost').addClass('blue')
+    Object.keys(ghostInfo).forEach(ghostClass => {
+      ghostInfo[ghostClass].blue = true
+    })
+    blueTimerId = setTimeout(() => {
+      $('.ghost.blue').removeClass('blue')
+      Object.keys(ghostInfo).forEach(ghostClass => {
+        ghostInfo[ghostClass].blue = false
+      })
     }, 3500)
   }
-
-  // function respawnGhost(){
-  //   eyesPosition === clydeStart)
-  //   ghostObjects.forEach(ghost => $squares.eq(ghost.position).removeClass('eyes'))
-  // }
-
-  //FUNCTION TO TURN THE GHOSTS BACK TO NORMAL AFTER BEING BLUE FOR SET TIME\
-  // DONT NEED THIS NOW SINCE ITS ALL HANDLED IN MOVEMENT CODE
-  // function showGhostAgain(){
-  //   blueGhosts = false
-  //   // ghostObjects.forEach(ghost => $squares.eq(ghost.position).removeClass('blue'))
-  // }
 
   //--------------------GAMEBOARD--------------------
 
   // FUNCTION TO CREATE THE GAMEBOARD
   function createBoard(){
     $board.attr('data-width', width)
-    for(let i = 0; i<width*width; i++) {
-      $board.append($('<div id='+ i +' />'))
-    }
+    for(let i = 0; i<width*width; i++) $board.append($('<div class="food" id='+ i +' />'))
     $squares = $('.gameboard div')
   }
 
   // FUNCTION TO CLEAR THE BOARD ON GAME RESET
   function destroyBoard() {
-    pacPosition = 270
+    pacInfo.position = pacInfo.startPosition
     score = 0
     $board.empty()
   }
@@ -278,7 +269,7 @@ $(() => {
 
   // FUNCTION TO MAKE PACMAN
   function makePac(){
-    $squares.eq(pacPosition)
+    $squares.eq(pacInfo.startPosition)
       .removeClass('food')
       .addClass('pacman')
   }
@@ -291,75 +282,62 @@ $(() => {
     } pacChomp.addEventListener('ended', () => playing = true )
   }
 
-
-
   // FUNCTION TO MOVE PACMAN
   function movePac(movement) {
-    currentStep = currentStep === 1 ? 0 : currentStep + 1
-    const newPosition = pacPosition + movement
+    pacInfo.currentStep = pacInfo.currentStep === 1 ? 0 : pacInfo.currentStep + 1
+    const newPosition = pacInfo.position + movement
     if (mazeArray.includes(newPosition)) return
-    $squares.eq(pacPosition).removeClass('pacman')
-    pacPosition = newPosition
-    const pacSquare = $squares.eq(pacPosition)
-    checkForPoints(pacSquare)
-    pacSquare.addClass('pacman')
+    $squares.eq(pacInfo.position).removeClass('pacman')
+    pacInfo.position = newPosition
+    const $pacSquare = $squares.eq(pacInfo.position)
+    checkForPoints(pacInfo.position)
+    $pacSquare.addClass('pacman')
       .removeClass('food')
       .removeClass('big-food')
       .attr('data-direction', directions[movement])
-      .attr('data-step', currentStep )
-    // if pacsquare has class of any of the ghosts then run game over
-    if (!$squares.toArray().some(square => square.classList.contains('food'))){
-      setTimeout(gameOver(),1000)
+      .attr('data-step', pacInfo.currentStep )
+
+    if (
+      $pacSquare.hasClass('ghost') &&
+      !$pacSquare.hasClass('blue') &&
+      !$pacSquare.hasClass('eyes')
+    ){
+      setTimeout(gameOver, 1000)
     }
   }
 
   //  FUNCTION TO ALLOW MOVEMENT TO START ON KEYDOWN
-  function startMovement(){
-    $(document).on('keydown', e => {
-      if (!pacMoves) return
-      // backward 37, up 38, forward 39, down 40
-      switch(e.keyCode) {
-        case 37: if(pacPosition % width > 0){
-          movePac(-1)
-        }
-          break
-        case 38: if(pacPosition - width >= 0) {
-          movePac(-width)
-        }
-          break
-        case 39: if(pacPosition % width < width-1) {
-          movePac(1)
-        }
-          break
-        case 40: if(pacPosition + width < width*width){
-          movePac(width)
-        }
-          break
+  $(document).on('keyup', e => {
+    // backward 37, up 38, forward 39, down 40
+    switch(e.keyCode) {
+      case 37: if(pacInfo.position % width > 0){
+        movePac(-1)
       }
-      pacMoves = false
-    })
-  }
+        break
+      case 38: if(pacInfo.position - width >= 0) {
+        movePac(-width)
+      }
+        break
+      case 39: if(pacInfo.position % width < width-1) {
+        movePac(1)
+      }
+        break
+      case 40: if(pacInfo.position + width < width*width){
+        movePac(width)
+      }
+        break
+    }
+  })
 
   //--------------------FOOD--------------------
 
-  //  FUNCTION TO GENERATE FOOD ON ALL SQUARES
-  function makeFood() {
-    $squares.addClass('food')
-  }
-
   // FUNCTION TO GENERATE SUPERFOOD AT RANDOM INDEX
   function makeSuperFood() {
+    const $foodSquares = $('.food')
+    console.log($foodSquares.length)
     for(let i = 0; i<10; i++) {
-      let superFoodIndex = Math.floor(Math.random()*$squares.length)
-      while (
-        mazeArray.includes(superFoodIndex) ||
-        pacPosition === superFoodIndex ||
-        Object.values(ghostPositions).includes(superFoodIndex)) {
-        superFoodIndex = Math.floor(Math.random()*$squares.length)
-      }
-      const superFoodLocation = $($squares[superFoodIndex])
-      superFoodLocation.addClass('big-food')
-      superFoodLocation.removeClass('food')
+      const superFoodIndex = Math.floor(Math.random()*$foodSquares.length)
+      $($foodSquares[superFoodIndex]).addClass('big-food').removeClass('food')
     }
   }
 
@@ -367,21 +345,25 @@ $(() => {
   //--------------------SCORING--------------------
 
   // FUNCTION TO CHECK IF PACMAN CURRENT LOCATION ADDS POINTS ETC
-  function checkForPoints(location){
-    if (location.hasClass('food')) {
+  function checkForPoints(index){
+    const $square = $squares.eq(index)
+    const ghost = Object.values(ghostInfo).find(ghost => ghost.position === index)
+    console.log(ghost)
+    if ($square.hasClass('food')) {
       updateScore(10)
       playChomp()
     }
-    if (location.hasClass('big-food')) {
+    if ($square.hasClass('big-food')) {
       updateScore(50)
       changeGhostsToBlue()
     }
-    if (location.hasClass('ghost') && location.hasClass('blue')) {
+    if ($square.hasClass('ghost') && $square.hasClass('blue')) {
       updateScore(200)
-      location.addClass('eyes')
-      clearTimeout(blueGhostTimer)
+      $square.addClass('eyes')
+      ghost.eyes = true
     }
-    if (location.hasClass('ghost') && !location.hasClass('blue') && !location.hasClass('eyes')) {
+    if ($square.hasClass('ghost') && !$square.hasClass('blue') && !$square.hasClass('eyes')) {
+      console.log('PAC THINKS ITS GAME OVER')
       gameOver()
     }
   }
@@ -396,34 +378,25 @@ $(() => {
 
   // FUNCTION FOR GAMEOVER
   function gameOver(){
-    clearInterval(clydeInterval)
-    clearInterval(blinkyInterval)
-    clearInterval(inkyInterval)
-    clearInterval(pinkyInterval)
-    clearInterval(pacInterval)
-    // $board.hide()
+    Object.keys(ghostInfo).forEach(ghostClass => {
+      clearInterval(ghostInfo[ghostClass].timerId)
+    })
+    clearInterval(pacInfo.timerId)
     $scoreBoard.hide()
     $endScreen.show()
     $endScreenHeader.text('Game Over')
     $endScreenPara.text(`You scored ${score} points`)
-    $(document).off('keydown')
   }
 
   // FUNCTION TO RESTART GAME ON RESET BUTTON CLICK
-  function restartGame() {
-    welcomeToGame()
-  }
-
-
   welcomeToGame()
 
   //-----------------------------------------EVENT LISTENERS-----------------------------------------
 
   //event listener to reset game on click
-  $restartButton.on('click', restartGame)
+  $restartButton.on('click', welcomeToGame)
   // event listener to start game on click
   $startButton.on('click', startGame)
-
   // $(document).on('keydown', playChomp)
 
 
