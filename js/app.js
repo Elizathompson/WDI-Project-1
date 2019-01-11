@@ -108,6 +108,7 @@ $(() => {
         $countdown.css('display', 'none')
         startGhosts()
         clearInterval(startCountdown)
+        startMovement()
       }
     }, 1000)
   }
@@ -328,27 +329,32 @@ $(() => {
   }
 
   //  FUNCTION TO ALLOW MOVEMENT TO START ON KEYDOWN
-  $(document).on('keyup', e => {
-    // backward 37, up 38, forward 39, down 40
-    switch(e.keyCode) {
-      case 37: if(pacInfo.position % width > 0){
-        movePac(-1)
+  function startMovement(){
+    $(document).on('keyup', e => {
+      // backward 37, up 38, forward 39, down 40
+      switch(e.keyCode) {
+        case 37: if(pacInfo.position % width > 0){
+          movePac(-1)
+        }
+          break
+        case 38: if(pacInfo.position - width >= 0) {
+          movePac(-width)
+        }
+          break
+        case 39: if(pacInfo.position % width < width-1) {
+          movePac(1)
+        }
+          break
+        case 40: if(pacInfo.position + width < width*width){
+          movePac(width)
+        }
+          break
       }
-        break
-      case 38: if(pacInfo.position - width >= 0) {
-        movePac(-width)
-      }
-        break
-      case 39: if(pacInfo.position % width < width-1) {
-        movePac(1)
-      }
-        break
-      case 40: if(pacInfo.position + width < width*width){
-        movePac(width)
-      }
-        break
-    }
-  })
+    })
+  }
+  function stopMovement(){
+    $(document).off('keyup')
+  }
 
   //--------------------FOOD--------------------
 
@@ -399,6 +405,7 @@ $(() => {
 
   // FUNCTION FOR GAMEOVER
   function gameOver(){
+    stopMovement()
     playDeath()
     // pacChomp.pause()
     // document.querySelector('.death').play()
