@@ -28,7 +28,7 @@ button.start {
   color: #c20ed5;
   font-size: 30px;
   margin-top: 30px;
-  margin-left: 730px;
+  margin-left: 760px;
   background-color: transparent;
   border: 4px dotted white;
 }
@@ -38,7 +38,7 @@ button.restart {
   color: #c20ed5;
   font-size: 30px;
   margin-top: 30px;
-  margin-left: 710px;
+  margin-left: 750px;
   background-color: transparent;
   border: 4px dotted white;
 }
@@ -226,7 +226,7 @@ div.message {
 .countdown {
   position: absolute;
   top: 35%;
-  left: calc(50vw - 25px);
+  left: calc(50% - 25px);
   width: 50px;
   font-size: 50px;
   color: white;
