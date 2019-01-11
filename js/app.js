@@ -314,6 +314,10 @@ $(() => {
       .attr('data-direction', directions[movement])
       .attr('data-step', pacInfo.currentStep )
 
+    if (!$squares.toArray().some(square => square.classList.contains('food'))){
+      gameOver()
+    }
+
     if (
       $pacSquare.hasClass('ghost') &&
       !$pacSquare.hasClass('blue') &&
@@ -381,9 +385,9 @@ $(() => {
     }
     if ($square.hasClass('ghost') && !$square.hasClass('blue') && !$square.hasClass('eyes')) {
       gameOver()
-
     }
   }
+
 
   // FUNCTION TO UPDATE SCOREBOARD
   function updateScore(points) {
