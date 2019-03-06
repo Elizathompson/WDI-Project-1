@@ -17,7 +17,6 @@
 
 ## My Game - Pac Man
 
-![Deep Sea Dive](https://user-images.githubusercontent.com/40343797/45214662-fc243200-b292-11e8-9c52-5a1053aa8c0a.png)
 
 You can find a hosted version here ----> [charlottemorgan.github.io/WDI-Project-1](https://charlottemorgan.github.io/WDI-Project-1/)
 
@@ -32,7 +31,6 @@ If Pac Man eats a flashing superfood this turns the ghosts blue. Bonus points ca
 ### Game Instructions
 1. The game begins with a welcome modal which introduces the game as well as providing instructions. The game is started by clicking on the "Start Game" button.
 
-![screenshot - Start Modal](https://user-images.githubusercontent.com/40343797/45220826-6777ff00-b2a7-11e8-8511-8a5f00bc0b74.png)
 
 2. After the start button has been clicked a 3 second countdown begins and shows on the screen. The keys are disabled during the countdown, once the countdown has finished the game starts and the player can begin moving Pac Man.
 
