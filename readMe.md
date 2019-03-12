@@ -17,10 +17,7 @@
 
 ## My Game - Pac Man
 
-<<<<<<< HEAD
 ![Pac Man](https://user-images.githubusercontent.com/44023542/51036211-5831f680-15a4-11e9-9cc3-1b84e3c42ae0.png)
-=======
->>>>>>> 87b060002cbc35798f98d927f4ab20a1b8c4ef4d
 
 You can find a hosted version here ----> [charlottemorgan.github.io/WDI-Project-1](https://charlottemorgan.github.io/WDI-Project-1/)
 
@@ -35,21 +32,14 @@ If Pac Man eats a flashing superfood this turns the ghosts blue. Bonus points ca
 ### Game Instructions
 1. The game begins with a welcome screen which introduces the game as well as providing instructions. The game is started by clicking on the "Start Game" button.
 
-<<<<<<< HEAD
 ![screenshot - Start Screen](https://user-images.githubusercontent.com/44023542/51035857-4ac83c80-15a3-11e9-980b-2bd75a688de0.png)
 
 2. After the start button has been clicked a 3 second countdown begins and shows on the screen. The keys are disabled during the countdown, once the countdown has finished the game starts and the player can begin moving Pac Man.
 
 ![screenshot - countdown](https://user-images.githubusercontent.com/44023542/51035886-67647480-15a3-11e9-86f7-8dbe04c3eb55.png)
-=======
-
-2. After the start button has been clicked a 3 second countdown begins and shows on the screen. The keys are disabled during the countdown, once the countdown has finished the game starts and the player can begin moving Pac Man.
-
->>>>>>> 87b060002cbc35798f98d927f4ab20a1b8c4ef4d
 
 3. Points are gained every time Pac Man eats food. The ghosts are chasing Pac Man by default.
 
-<<<<<<< HEAD
 ![screenshot - score](https://user-images.githubusercontent.com/44023542/51035926-8531d980-15a3-11e9-8fae-23ac3be372db.png)
 
 4. If Pac Man eats flashing superfood he gets extra points and the ghosts turn blue. While the ghosts are blue they move away from Pac Man.
@@ -91,7 +81,3 @@ The superfood is generated at random points on the grid 10 times using a for loo
 
 
 ## Future features
-=======
-
-
->>>>>>> 87b060002cbc35798f98d927f4ab20a1b8c4ef4d
