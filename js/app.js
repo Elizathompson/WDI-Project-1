@@ -413,7 +413,6 @@ $(() => {
       clearInterval(ghostInfo[ghostClass].timerId)
     })
     clearInterval(pacInfo.timerId)
-    $scoreBoard.hide()
     setTimeout(() => {
       $endScreen.show()
       $endScreenHeader.text('Game Over')
