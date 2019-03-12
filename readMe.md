@@ -58,26 +58,22 @@ If Pac Man eats a flashing superfood this turns the ghosts blue. Bonus points ca
 
 The starting point for this game was creating a grid on which to build the rest of the game. I created the grid by using JavaScript to generate 400 divs each with an ID and a class of 'food'. After the grid had been created I added the maze, the function for this loops over the array of indexes and adds a class of 'maze' at each index.
 
-The superfood is generated at random points on the grid 10 times using a for loop. It will only generate superfood where there is already food, avoiding the maze. It removes the class of 'food' from the div and adds the class of 'superfood'
+The superfood is generated at random points on the grid 10 times using a for loop. It will only generate superfood where there is already food, avoiding the maze. It removes the class of 'food' from the div and adds the class of 'superfood'.
 
+PacMans movement is on a keyup event listener and has conditions to prevent his movement outside of the grid or through walls.
 
-//creating & moving pacman
-
-//creating Ghosts
-
-//ghost movement logic
-
-
-
-
-
+The ghosts move on separate intervals, with their start position hard coded. Each move the ghost makes is based on the current location of PacMan and is decided in a function  "makeIntelligentMove" - If the next move the ghost is going to make isn't closer to PacMan then the ghost has to make a new choice. This logic is reversed to make the ghosts move away from PacMan when they turn blue.
 
 ### Challenges
 
-
+The biggest challenge for this project was definitely the ghost movement logic and the functions to achieve this were quite complex for my level of ability at the time of the project. I enjoyed the challenge as it pushed me to learn new content.
 
 ### Wins
 
-
+A big win for this game was to get the ghosts changing to blue when the superfood is eaten and then also having the blue ghosts turn to eyes when they are eaten by PacMan. In addition it was a win to get the eyes to return to their home position and "respawn" into normal ghosts again.
 
 ## Future features
+
+In the future I would like to try and rebuild PacMan using slightly different logic to make the ghost movement more fluid and responsive.
+
+I would also like to add in harder levels and more randomly generating food eg bonus cherries
